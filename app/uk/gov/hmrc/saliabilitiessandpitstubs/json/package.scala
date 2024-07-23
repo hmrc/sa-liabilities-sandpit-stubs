@@ -14,16 +14,16 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.saliabilitiessandpitstubs.config
+package uk.gov.hmrc.saliabilitiessandpitstubs
 
-import com.google.inject.AbstractModule
-import uk.gov.hmrc.saliabilitiessandpitstubs.controllers.BalanceController
+import play.api.libs.json.*
 
-class Module extends AbstractModule {
+package object json:
+  def bigDecimalBasedWrites[T](f: T => BigDecimal): Writes[T] = Writes.BigDecimalWrites.contramap(f)
+  def bigDecimalBasedReads: Reads[BigDecimal]                 = (json: JsValue) => json.validate[BigDecimal]
 
-  override def configure(): Unit = {
-
-    bind(classOf[AppConfig]).asEagerSingleton()
-    bind(classOf[BalanceController]).asEagerSingleton()
-  }
-}
+  trait StringBasedJsonOps[T]:
+    def apply(value: String): T
+    def valueOf(t: T): String
+    given Writes[T] = Writes.StringWrites.contramap(valueOf)
+    given Reads[T]  = Reads.StringReads.map(apply)

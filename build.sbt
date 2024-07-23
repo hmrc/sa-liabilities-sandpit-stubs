@@ -16,6 +16,7 @@ lazy val microservice = Project("sa-liabilities-sandpit-stubs", file("."))
   .settings(
     Compile / unmanagedResourceDirectories += baseDirectory.value / "resources",
   )
+  .settings(PlayKeys.playDefaultPort := 9900)
 
 lazy val it = project
   .enablePlugins(PlayScala)

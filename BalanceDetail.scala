@@ -14,22 +14,19 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.saliabilitiessandpitstubs.controllers
+package uk.gov.hmrc.saliabilitiessandpitapi.models.integration
 
-import play.api.mvc._
-import uk.gov.hmrc.play.bootstrap.backend.controller.BackendBaseController
+import play.api.libs.json.*
+import uk.gov.hmrc.saliabilitiessandpitapi.models.*
 
-import javax.inject.Inject
-import scala.concurrent.Future
+case class BalanceDetail(
+  payableAmount: PayableAmount,
+  payableDueDate: PayableDueDate,
+  pendingDueAmount: PendingDueAmount,
+  pendingDueDate: PendingDueDate,
+  overdueAmount: OverdueAmount,
+  totalBalance: TotalBalance
+)
 
-private[controllers] trait HelloWorldActions {
-  self: BaseController =>
-
-  val hello: Action[AnyContent] = Action.async { implicit request: Request[_] =>
-    Future.successful(Ok("Hello world"))
-  }
-}
-
-class MicroserviceHelloWorldController @Inject() (val controllerComponents: ControllerComponents)
-  extends HelloWorldActions
-    with BackendBaseController
+object BalanceDetail:
+  given Format[BalanceDetail] = Json.format[BalanceDetail]

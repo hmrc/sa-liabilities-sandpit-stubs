@@ -14,16 +14,19 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.saliabilitiessandpitstubs.config
+package uk.gov.hmrc.saliabilitiessandpitapi.models.integration
 
-import com.google.inject.AbstractModule
-import uk.gov.hmrc.saliabilitiessandpitstubs.controllers.BalanceController
+import play.api.libs.json.*
+import uk.gov.hmrc.saliabilitiessandpitapi.models.*
 
-class Module extends AbstractModule {
+case class BalanceDetail(
+  payableAmount: PayableAmount,
+  payableDueDate: PayableDueDate,
+  pendingDueAmount: PendingDueAmount,
+  pendingDueDate: PendingDueDate,
+  overdueAmount: OverdueAmount,
+  totalBalance: TotalBalance
+)
 
-  override def configure(): Unit = {
-
-    bind(classOf[AppConfig]).asEagerSingleton()
-    bind(classOf[BalanceController]).asEagerSingleton()
-  }
-}
+object BalanceDetail:
+  given Format[BalanceDetail] = Json.format[BalanceDetail]
