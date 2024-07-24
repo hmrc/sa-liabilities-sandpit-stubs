@@ -19,42 +19,62 @@ package uk.gov.hmrc.saliabilitiessandpitstubs.controllers
 import play.api.libs.json.Json
 import play.api.mvc.*
 import uk.gov.hmrc.play.bootstrap.backend.controller.BackendBaseController
-import uk.gov.hmrc.saliabilitiessandpitstubs.models.*
+import uk.gov.hmrc.saliabilitiessandpitstubs.models.{OverdueAmount, *}
 import uk.gov.hmrc.saliabilitiessandpitstubs.models.integration.BalanceDetail
 
 import javax.inject.Inject
+import scala.collection.immutable.HashMap
 import scala.concurrent.Future
 
 private[controllers] trait BalanceActions {
   self: BaseController =>
 
+  var balanceDetailMap: Map[String, List[BalanceDetail]] = Map(
+    "AA000000A" -> List(
+      BalanceDetail(
+        payableAmount = PayableAmount(100.00),
+        payableDueDate = PayableDueDate("2024-07-20"),
+        pendingDueAmount = PendingDueAmount(100.02),
+        pendingDueDate = PendingDueDate("2024-08-20"),
+        overdueAmount = OverdueAmount(100.03),
+        totalBalance = TotalBalance(300.5)
+      )
+    ),
+    "AA000000B" -> List(
+      BalanceDetail(
+        payableAmount = PayableAmount(200.00),
+        payableDueDate = PayableDueDate("2024-07-20"),
+        pendingDueAmount = PendingDueAmount(200.02),
+        pendingDueDate = PendingDueDate("2024-08-20"),
+        overdueAmount = OverdueAmount(200.03),
+        totalBalance = TotalBalance(600.5)
+      )
+    ),
+    "AA000000C" -> List(
+      BalanceDetail(
+        payableAmount = PayableAmount(300.00),
+        payableDueDate = PayableDueDate("2024-07-20"),
+        pendingDueAmount = PendingDueAmount(300.02),
+        pendingDueDate = PendingDueDate("2024-08-20"),
+        overdueAmount = OverdueAmount(300.03),
+        totalBalance = TotalBalance(900.5)
+      )
+    )
+  ).withDefaultValue(
+    List(
+      BalanceDetail(
+        payableAmount = PayableAmount(0.00),
+        payableDueDate = PayableDueDate("1999-01-01"),
+        pendingDueAmount = PendingDueAmount(0.0),
+        pendingDueDate = PendingDueDate("1999-01-01"),
+        overdueAmount = OverdueAmount(0.0),
+        totalBalance = TotalBalance(0.0)
+      )
+    )
+  )
+
   def getBalanceByNino(nino: String): Action[AnyContent] = Action.async { implicit request: Request[_] =>
-    nino match{
-      case "AA000000A" =>
-        val balanceDetails = List(
-          BalanceDetail(
-            payableAmount = PayableAmount(100.00),
-            payableDueDate = PayableDueDate("2024-07-20"),
-            pendingDueAmount = PendingDueAmount(200.00),
-            pendingDueDate = PendingDueDate("2024-08-20"),
-            overdueAmount = OverdueAmount(50.00),
-            totalBalance = TotalBalance(350.1)
-          )
-        )
-        Future.successful(Ok(Json.toJson(balanceDetails)))
-      case "AA000000B" =>
-        val balanceDetails = List(
-          BalanceDetail(
-            payableAmount = PayableAmount(200.00),
-            payableDueDate = PayableDueDate("2024-07-20"),
-            pendingDueAmount = PendingDueAmount(400.00),
-            pendingDueDate = PendingDueDate("2024-08-20"),
-            overdueAmount = OverdueAmount(100.00),
-            totalBalance = TotalBalance(700.2)
-          )
-        )
-        Future.successful(Ok(Json.toJson(balanceDetails)))
-    }
+    Future.successful(Ok(Json.toJson(balanceDetailMap.apply(nino))))
   }
 }
 
