@@ -23,7 +23,6 @@ import uk.gov.hmrc.saliabilitiessandpitstubs.models.{OverdueAmount, *}
 import uk.gov.hmrc.saliabilitiessandpitstubs.models.integration.BalanceDetail
 
 import javax.inject.Inject
-import scala.collection.immutable.HashMap
 import scala.concurrent.Future
 
 private[controllers] trait BalanceActions {
