@@ -78,5 +78,5 @@ private[controllers] trait BalanceActions {
 }
 
 class BalanceController @Inject() (val controllerComponents: ControllerComponents)
-  extends BalanceActions
+    extends BalanceActions
     with BackendBaseController

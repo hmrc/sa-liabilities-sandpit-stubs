@@ -19,7 +19,7 @@ package uk.gov.hmrc.saliabilitiessandpitstubs.config
 import javax.inject.Inject
 import play.api.Configuration
 
-class AppConfig @Inject()(config: Configuration) {
+class AppConfig @Inject() (config: Configuration) {
 
   val appName: String = config.get[String]("appName")
 }
