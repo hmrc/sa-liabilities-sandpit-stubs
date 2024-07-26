@@ -14,12 +14,19 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.saliabilitiessandpitstubs.config
+package uk.gov.hmrc.saliabilitiessandpitstubs.models.integration
 
-import javax.inject.Inject
-import play.api.Configuration
+import play.api.libs.json.*
+import uk.gov.hmrc.saliabilitiessandpitstubs.models.*
 
-class AppConfig @Inject() (config: Configuration) {
+case class BalanceDetail(
+  payableAmount: PayableAmount,
+  payableDueDate: PayableDueDate,
+  pendingDueAmount: PendingDueAmount,
+  pendingDueDate: PendingDueDate,
+  overdueAmount: OverdueAmount,
+  totalBalance: TotalBalance
+)
 
-  val appName: String = config.get[String]("appName")
-}
+object BalanceDetail:
+  given Format[BalanceDetail] = Json.format[BalanceDetail]

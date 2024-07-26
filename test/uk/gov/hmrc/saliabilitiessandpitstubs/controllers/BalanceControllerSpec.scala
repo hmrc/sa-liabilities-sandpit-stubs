@@ -16,17 +16,21 @@
 
 package uk.gov.hmrc.saliabilitiessandpitstubs.controllers
 
-import controllers.Assets
-import javax.inject.{Inject, Singleton}
-import play.api.mvc.{Action, AnyContent, ControllerComponents}
-import uk.gov.hmrc.play.bootstrap.backend.controller.BackendController
+import org.scalatest.matchers.should.Matchers
+import org.scalatest.wordspec.AnyWordSpec
+import play.api.http.Status
+import play.api.test.Helpers._
+import play.api.test.{FakeRequest, Helpers}
 
-@Singleton
-class DocumentationController @Inject() (assets: Assets, cc: ControllerComponents) extends BackendController(cc) {
+class BalanceControllerSpec extends AnyWordSpec with Matchers {
 
-  def definition(): Action[AnyContent] =
-    assets.at("/public/api", "definition.json")
+  private val fakeRequest = FakeRequest("GET", "/AA000000A")
+  private val controller  = new BalanceController(Helpers.stubControllerComponents())
 
-  def specification(version: String, file: String): Action[AnyContent] =
-    assets.at(s"/public/api/conf/$version", file)
+  "GET /balance/AA000000A" should {
+    "return 200" in {
+      val result = controller.getBalanceByNino("AA000000A")(fakeRequest)
+      status(result) shouldBe Status.OK
+    }
+  }
 }
