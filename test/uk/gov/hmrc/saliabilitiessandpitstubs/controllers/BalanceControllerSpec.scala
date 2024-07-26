@@ -24,10 +24,10 @@ import play.api.test.{FakeRequest, Helpers}
 
 class BalanceControllerSpec extends AnyWordSpec with Matchers {
 
-  private val fakeRequest = FakeRequest("GET", "/")
+  private val fakeRequest = FakeRequest("GET", "/AA000000A")
   private val controller = new BalanceController(Helpers.stubControllerComponents())
 
-  "GET /" should {
+  "GET /balance/AA000000A" should {
     "return 200" in {
       val result = controller.getBalanceByNino("AA000000A")(fakeRequest)
       status(result) shouldBe Status.OK
