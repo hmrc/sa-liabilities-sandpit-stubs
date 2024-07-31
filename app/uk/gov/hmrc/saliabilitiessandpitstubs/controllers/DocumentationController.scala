@@ -24,9 +24,7 @@ import uk.gov.hmrc.play.bootstrap.backend.controller.BackendController
 @Singleton
 class DocumentationController @Inject() (assets: Assets, cc: ControllerComponents) extends BackendController(cc) {
 
-  def definition(): Action[AnyContent] =
-    assets.at("/public/api", "definition.json")
+  def definition(): Action[AnyContent] = assets.at("/public/api", "definition.json")
 
-  def specification(version: String, file: String): Action[AnyContent] =
-    assets.at(s"/public/api/conf/$version", file)
+  def specification(version: String, file: String): Action[AnyContent] = assets.at(s"/public/api/conf/$version", file)
 }

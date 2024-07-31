@@ -19,13 +19,16 @@ package uk.gov.hmrc.saliabilitiessandpitstubs.controllers
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
 import play.api.http.Status
-import play.api.test.Helpers._
+import play.api.mvc.ControllerComponents
+import play.api.test.Helpers.*
 import play.api.test.{FakeRequest, Helpers}
+import uk.gov.hmrc.saliabilitiessandpitstubs.controllers.action.DefaultOpenAuthAction
 
 class BalanceControllerSpec extends AnyWordSpec with Matchers {
 
-  private val fakeRequest = FakeRequest("GET", "/AA000000A")
-  private val controller  = new BalanceController(Helpers.stubControllerComponents())
+  private val fakeRequest                      = FakeRequest("GET", "/AA000000A")
+  private val components: ControllerComponents = Helpers.stubControllerComponents()
+  private val controller                       = new BalanceController(components, new DefaultOpenAuthAction(components.executionContext))
 
   "GET /balance/AA000000A" should {
     "return 200" in {

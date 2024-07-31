@@ -19,7 +19,6 @@ package uk.gov.hmrc.saliabilitiessandpitstubs.config
 import javax.inject.Inject
 import play.api.Configuration
 
-class AppConfig @Inject() (config: Configuration) {
-
-  val appName: String = config.get[String]("appName")
-}
+class AppConfig @Inject() (config: Configuration):
+  val appName: String                     = config.get[String]("appName")
+  val bearerAuthorisationEnabled: Boolean = config.get[Boolean]("feature-toggles.new-auth-check-enabled")

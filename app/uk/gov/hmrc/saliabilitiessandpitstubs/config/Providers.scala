@@ -14,17 +14,18 @@
  * limitations under the License.
  */
 
+//noinspection ScalaFileName
 package uk.gov.hmrc.saliabilitiessandpitstubs.config
 
-import com.google.inject.AbstractModule
-import uk.gov.hmrc.saliabilitiessandpitstubs.controllers.BalanceController
-import uk.gov.hmrc.saliabilitiessandpitstubs.controllers.action.AuthorizationActionFilter
+import com.google.inject.Provider
+import uk.gov.hmrc.saliabilitiessandpitstubs.controllers.action.{AuthorizationActionFilter, DefaultOpenAuthAction, DefaultTokenBasedAction}
 
-class Module extends AbstractModule {
+import javax.inject.Inject
+import scala.concurrent.ExecutionContext
 
-  override def configure(): Unit = {
-    bind(classOf[AppConfig]).asEagerSingleton()
-    bind(classOf[BalanceController]).asEagerSingleton()
-    bind(classOf[AuthorizationActionFilter]).toProvider(classOf[AuthActionProvider]).asEagerSingleton()
-  }
-}
+class AuthActionProvider @Inject() (config: AppConfig, executionContext: ExecutionContext)
+    extends Provider[AuthorizationActionFilter]:
+  val get: AuthorizationActionFilter =
+    (if config.bearerAuthorisationEnabled then classOf[DefaultTokenBasedAction] else classOf[DefaultOpenAuthAction])
+      .getConstructor(classOf[ExecutionContext])
+      .newInstance(executionContext)

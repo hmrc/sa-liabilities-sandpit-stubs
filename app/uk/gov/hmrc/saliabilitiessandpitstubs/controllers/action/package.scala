@@ -14,19 +14,15 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.saliabilitiessandpitstubs.models.integration
+package uk.gov.hmrc.saliabilitiessandpitstubs.controllers.action
 
-import play.api.libs.json.*
-import uk.gov.hmrc.saliabilitiessandpitstubs.models.*
+import uk.gov.hmrc.play.bootstrap.backend.controller.{BackendBaseController, BackendHeaderCarrierProvider}
+import uk.gov.hmrc.saliabilitiessandpitstubs.controllers.action.AuthorizationActionFilter.{OpenAuthAction, TokenBasedAction}
 
-case class BalanceDetail(
-  payableAmount: PayableAmount,
-  payableDueDate: PayableDueDate,
-  pendingDueAmount: PendingDueAmount,
-  pendingDueDate: PendingDueDate,
-  overdueAmount: OverdueAmount,
-  totalBalance: TotalBalance
-)
+import scala.concurrent.ExecutionContext
 
-object BalanceDetail:
-  given Format[BalanceDetail] = Json.format[BalanceDetail]
+class DefaultTokenBasedAction(val executionContext: ExecutionContext)
+    extends TokenBasedAction,
+      BackendHeaderCarrierProvider
+
+class DefaultOpenAuthAction(val executionContext: ExecutionContext) extends OpenAuthAction
