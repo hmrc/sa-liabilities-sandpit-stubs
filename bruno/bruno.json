@@ -1,0 +1,9 @@
+{
+  "version": "1",
+  "name": "sa-liabilities-sandpit-stubs",
+  "type": "collection",
+  "ignore": [
+    "node_modules",
+    ".git"
+  ]
+}

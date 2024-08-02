@@ -16,11 +16,13 @@
 
 package uk.gov.hmrc.saliabilitiessandpitstubs.models
 
-import play.api.http.{ContentTypeOf, ContentTypes, Writeable}
+import play.api.http.{ContentTypes, Writeable}
 import play.api.libs.json.*
 import play.api.libs.json.Json.{toJson, writes}
-import play.api.mvc.Codec
 import uk.gov.hmrc.saliabilitiessandpitstubs.models.*
+
+import scala.annotation.targetName
+import scala.collection.immutable.Iterable
 
 case class BalanceDetail(
   payableAmount: PayableAmount,
@@ -32,8 +34,15 @@ case class BalanceDetail(
 )
 
 object BalanceDetail:
-  given Format[BalanceDetail]          = Json.format[BalanceDetail]
-  given Writeable[List[BalanceDetail]] = Writeable(
-    transform = data => Writeable.writeableOf_JsValue.transform(toJson(data)),
-    contentType = Some(ContentTypes.JSON)
-  )
+  given OWrites[BalanceDetail] = writes[BalanceDetail]
+
+  @targetName("UnionOfWriteableIterableBalanceDetail")
+  given Writeable[Iterable[BalanceDetail] | BalanceDetail] =
+    val toJson: (Iterable[BalanceDetail] | BalanceDetail) => JsValue =
+      case single: BalanceDetail             => Json.toJson(single)
+      case iterable: Iterable[BalanceDetail] => Json.toJson(iterable)
+
+    Writeable(
+      transform = data => Writeable.writeableOf_JsValue.transform(toJson(data)),
+      contentType = Some(ContentTypes.JSON)
+    )

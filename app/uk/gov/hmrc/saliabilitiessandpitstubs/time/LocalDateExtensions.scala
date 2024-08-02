@@ -14,16 +14,19 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.saliabilitiessandpitstubs
-
-import play.api.libs.json.*
+package uk.gov.hmrc.saliabilitiessandpitstubs.time
 
 import java.time.LocalDate
+import java.time.temporal.*
+import java.time.temporal.ChronoUnit.DAYS
+import scala.util.Random
 
-package object json:
-  def bigDecimalBasedWrites[T](f: T => BigDecimal): Writes[T] = Writes.BigDecimalWrites.contramap(f)
+trait LocalDateExtensions:
 
-  trait StringBasedJsonOps[T]:
-    def apply(value: String | LocalDate): T
-    def valueOf(t: T): String
-    given Writes[T] = Writes[T](t => Json.toJson(valueOf(t)))
+  def nextDayInFuture(monthsToAdd: Int): LocalDate =
+    val startDate = LocalDate.now()
+    val endDate   = startDate.plusMonths(monthsToAdd)
+    val days      = DAYS.between(startDate, endDate).toInt
+    startDate.plusDays(Random.nextInt(days + 1))
+
+object LocalDateExtensions extends LocalDateExtensions
