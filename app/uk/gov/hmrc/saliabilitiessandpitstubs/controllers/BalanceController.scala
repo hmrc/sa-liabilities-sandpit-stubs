@@ -20,12 +20,13 @@ import play.api.Logging
 import play.api.mvc.*
 import uk.gov.hmrc.play.bootstrap.backend.controller.BackendBaseController
 import uk.gov.hmrc.saliabilitiessandpitstubs.controllers.action.{AuthorizationActionFilter, BalanceActions}
+import uk.gov.hmrc.saliabilitiessandpitstubs.service.BalanceDetailService
 
 import javax.inject.Inject
 
 class BalanceController @Inject() (
   val controllerComponents: ControllerComponents,
   auth: AuthorizationActionFilter
-) extends BalanceActions(using auth),
+) extends BalanceActions(using auth, BalanceDetailService),
       BackendBaseController,
       Logging

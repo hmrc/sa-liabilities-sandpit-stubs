@@ -1,0 +1,19 @@
+meta {
+  name: Balances-using-token
+  type: http
+  seq: 2
+}
+
+get {
+  url: http://localhost:9900/balance/:nino
+  body: none
+  auth: bearer
+}
+
+params:path {
+  nino: AA000000C
+}
+
+auth:bearer {
+  token: test
+}
