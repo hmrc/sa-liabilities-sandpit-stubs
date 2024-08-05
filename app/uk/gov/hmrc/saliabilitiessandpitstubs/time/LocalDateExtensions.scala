@@ -23,9 +23,9 @@ import scala.util.Random
 
 trait LocalDateExtensions:
 
-  def nextDayInFuture(monthsToAdd: Int): LocalDate =
+  def nextDayInFuture(daysToAdd: Int): LocalDate =
     val startDate = LocalDate.now()
-    val endDate   = startDate.plusMonths(monthsToAdd)
+    val endDate   = startDate.plusDays(daysToAdd)
     val days      = DAYS.between(startDate, endDate).toInt
     startDate.plusDays(Random.nextInt(days + 1))
 
