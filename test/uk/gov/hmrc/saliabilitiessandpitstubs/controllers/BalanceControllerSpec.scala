@@ -41,7 +41,7 @@ class BalanceControllerSpec extends AnyWordSpec with Matchers {
     "return 200" in {
       val result = controller.getBalanceByNino("AA000000B")(fakeRequest)
       contentAsString(result) shouldBe contentAsString(controller.getBalanceByNino("AA000000B")(fakeRequest))
-      status(result) shouldBe Status.OK
+      status(result)          shouldBe Status.OK
     }
   }
 
@@ -49,7 +49,7 @@ class BalanceControllerSpec extends AnyWordSpec with Matchers {
     "return 200" in {
       val result = controller.getBalanceByNino("AA000000D")(fakeRequest)
       contentAsString(result) shouldBe contentAsString(controller.getBalanceByNino("AA000000D")(fakeRequest))
-      status(result) shouldBe Status.OK
+      status(result)          shouldBe Status.OK
     }
   }
 }

@@ -25,8 +25,8 @@ import scala.util.Random
 trait BalanceDetailGenerator(using LocalDateExtensions):
 
   def generate(nino: String): BalanceDetail =
-    val random = new Random(nino.hashCode())
-    val poundsToPence = BigDecimal(100)
+    val random           = new Random(nino.hashCode())
+    val poundsToPence    = BigDecimal(100)
     val pendingDueDate   = PendingDueDate(nextDayInFuture(random.between(0, 90)))
     val payableDueDate   = PayableDueDate(nextDayInFuture(random.between(0, 180)))
     val overdueAmount    = OverdueAmount(BigDecimal(random.between(-999, 999)) / poundsToPence)
