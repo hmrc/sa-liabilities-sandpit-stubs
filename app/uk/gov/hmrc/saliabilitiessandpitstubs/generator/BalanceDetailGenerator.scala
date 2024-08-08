@@ -24,20 +24,14 @@ import scala.util.Random
 
 trait BalanceDetailGenerator(using LocalDateExtensions):
 
-  extension (random: Random)
-    private def nextInt(range: Range): Int =
-      val start  = range.start
-      val end    = range.end
-      start + random.nextInt((end - start) + 1)
-
   def generate(nino: String): BalanceDetail =
     val random = new Random(nino.hashCode())
     val poundsToPence = BigDecimal(100)
-    val pendingDueDate   = PendingDueDate(nextDayInFuture(random.nextInt(0 to 90)))
-    val payableDueDate   = PayableDueDate(nextDayInFuture(random.nextInt(0 to 180)))
-    val overdueAmount    = OverdueAmount(BigDecimal(random.nextInt(-999 to 999)) / poundsToPence)
-    val payableAmount    = PayableAmount(BigDecimal(random.nextInt(-9999 to 9999)) / poundsToPence)
-    val pendingDueAmount = PendingDueAmount(BigDecimal(random.nextInt(-99999 to 99999)) / poundsToPence)
+    val pendingDueDate   = PendingDueDate(nextDayInFuture(random.between(0, 90)))
+    val payableDueDate   = PayableDueDate(nextDayInFuture(random.between(0, 180)))
+    val overdueAmount    = OverdueAmount(BigDecimal(random.between(-999, 999)) / poundsToPence)
+    val payableAmount    = PayableAmount(BigDecimal(random.between(-9999, 9999)) / poundsToPence)
+    val pendingDueAmount = PendingDueAmount(BigDecimal(random.between(-99999, 99999)) / poundsToPence)
     val totalBalance     = TotalBalance(payableAmount ++ pendingDueAmount ++ overdueAmount)
 
     BalanceDetail(payableAmount, payableDueDate, pendingDueAmount, pendingDueDate, overdueAmount, totalBalance)
