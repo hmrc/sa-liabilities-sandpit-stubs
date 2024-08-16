@@ -28,23 +28,8 @@ trait BalanceDetailService(using BalanceDetailGenerator):
 object BalanceDetailService extends BalanceDetailService(using BalanceDetailGenerator):
 
   private val details: Map[String, BalanceDetail | Seq[BalanceDetail]] = Map(
-    "AA000000A" -> BalanceDetail(
-      payableAmount = PayableAmount(100.00),
-      payableDueDate = PayableDueDate("2024-07-20"),
-      pendingDueAmount = PendingDueAmount(100.02),
-      pendingDueDate = PendingDueDate("2024-08-20"),
-      overdueAmount = OverdueAmount(100.03),
-      totalBalance = TotalBalance(300.5)
-    ),
-    "AA000000B" -> BalanceDetail(
-      payableAmount = PayableAmount(200.00),
-      payableDueDate = PayableDueDate("2024-07-20"),
-      pendingDueAmount = PendingDueAmount(200.02),
-      pendingDueDate = PendingDueDate("2024-08-20"),
-      overdueAmount = OverdueAmount(200.03),
-      totalBalance = TotalBalance(600.5)
-    ),
-    "AA000000C" -> generate,
-    "AA000000D" -> Seq.fill(2)(generate),
-    "AA000000E" -> Seq.fill(3)(generate)
+    "AA000000A" -> generate,
+    "AA000000B" -> generate,
+    "AA000000C" -> Seq.fill(2)(generate),
+    "AA000000D" -> Seq.fill(4)(generate)
   )
