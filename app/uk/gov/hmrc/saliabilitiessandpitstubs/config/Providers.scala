@@ -17,7 +17,6 @@
 //noinspection ScalaFileName
 package uk.gov.hmrc.saliabilitiessandpitstubs.config
 
-
 import uk.gov.hmrc.saliabilitiessandpitstubs.controllers.action.{AuthorizationActionFilter, DefaultOpenAuthAction, DefaultTokenBasedAction}
 
 import javax.inject.{Inject, Provider}
@@ -31,6 +30,5 @@ class AuthActionProvider @Inject() (config: AppConfig, executionContext: Executi
       .getConstructor(classOf[ExecutionContext])
       .newInstance(executionContext)
 
-class RandomProvider @Inject() (config: AppConfig)
-  extends Provider[Random]:
+class RandomProvider @Inject() (config: AppConfig) extends Provider[Random]:
   val get: Random = new Random(config.randomSeed)

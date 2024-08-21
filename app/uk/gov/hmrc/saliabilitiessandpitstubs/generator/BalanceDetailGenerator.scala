@@ -22,15 +22,14 @@ import uk.gov.hmrc.saliabilitiessandpitstubs.time.LocalDateExtensions.nextDayInF
 import scala.util.Random
 import scala.util.Random.nextInt
 
-
-trait BalanceDetailGenerator (using LocalDateExtensions, Random):
+trait BalanceDetailGenerator(using LocalDateExtensions, Random):
 
   extension (range: Range)
     private inline def randomInt: Int =
-      val start  = range.start
-      val end    = range.end
+      val start = range.start
+      val end   = range.end
       start + nextInt((end - start) + 1)
-  
+
   def generate: BalanceDetail =
     val pendingDueDate   = PendingDueDate(nextDayInFuture(monthsToAdd = 3))
     val payableDueDate   = PayableDueDate(nextDayInFuture(monthsToAdd = 6))
@@ -40,5 +39,3 @@ trait BalanceDetailGenerator (using LocalDateExtensions, Random):
     val totalBalance     = TotalBalance(payableAmount ++ pendingDueAmount ++ overdueAmount)
 
     BalanceDetail(payableAmount, payableDueDate, pendingDueAmount, pendingDueDate, overdueAmount, totalBalance)
-
-object BalanceDetailGenerator extends BalanceDetailGenerator(using LocalDateExtensions, Random)

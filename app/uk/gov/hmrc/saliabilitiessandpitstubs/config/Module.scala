@@ -20,6 +20,8 @@ import com.google.inject.AbstractModule
 import uk.gov.hmrc.saliabilitiessandpitstubs.controllers.BalanceController
 import uk.gov.hmrc.saliabilitiessandpitstubs.controllers.action.AuthorizationActionFilter
 import uk.gov.hmrc.saliabilitiessandpitstubs.generator.BalanceDetailGenerator
+import uk.gov.hmrc.saliabilitiessandpitstubs.generator.DefaultBalanceDetailGenerator
+import uk.gov.hmrc.saliabilitiessandpitstubs.service.BalanceDetailService
 
 import scala.util.Random
 
@@ -28,7 +30,7 @@ class Module extends AbstractModule {
   override def configure(): Unit = {
     bind(classOf[AppConfig]).asEagerSingleton()
     bind(classOf[BalanceController]).asEagerSingleton()
-    bind(classOf[BalanceDetailGenerator]).asEagerSingleton()
+    bind(classOf[BalanceDetailGenerator]).to(classOf[DefaultBalanceDetailGenerator]).asEagerSingleton()
     bind(classOf[AuthorizationActionFilter]).toProvider(classOf[AuthActionProvider]).asEagerSingleton()
     bind(classOf[Random]).toProvider(classOf[RandomProvider]).asEagerSingleton()
   }
