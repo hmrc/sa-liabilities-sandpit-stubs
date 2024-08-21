@@ -24,6 +24,7 @@ import uk.gov.hmrc.saliabilitiessandpitstubs.service.BalanceDetailService
 
 import javax.inject.Inject
 
+
 class BalanceController @Inject() (
   val controllerComponents: ControllerComponents,
   auth: AuthorizationActionFilter
