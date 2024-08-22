@@ -43,25 +43,21 @@ object PayableDueDate extends StringBasedJsonOps[PayableDueDate]:
   def valueOf(payableDueDate: PayableDueDate): String  = payableDueDate
 
 object TotalBalance:
-  given Writes[TotalBalance] = bigDecimalBasedWrites(apply)
-
   def apply(value: BigDecimal): TotalBalance = value
+  given Writes[TotalBalance]                 = bigDecimalBasedWrites(apply)
 
 object PayableAmount:
-  given Writes[PayableAmount] = bigDecimalBasedWrites(apply)
-
   def apply(value: BigDecimal): PayableAmount = value
+  given Writes[PayableAmount]                 = bigDecimalBasedWrites(apply)
 
   extension (amount: PayableAmount) def ++(other: PendingDueAmount): PendingDueAmount = amount + other
 
 object PendingDueAmount:
-  given Writes[PendingDueAmount] = bigDecimalBasedWrites(apply)
-
   def apply(value: BigDecimal): PendingDueAmount = value
+  given Writes[PendingDueAmount]                 = bigDecimalBasedWrites(apply)
 
   extension (amount: PendingDueAmount) def ++(other: OverdueAmount): BigDecimal = amount + other
 
 object OverdueAmount:
-  given Writes[OverdueAmount] = bigDecimalBasedWrites(apply)
-
   def apply(value: BigDecimal): OverdueAmount = value
+  given Writes[OverdueAmount]                 = bigDecimalBasedWrites(apply)
