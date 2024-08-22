@@ -26,7 +26,8 @@ import javax.inject.Inject
 
 class BalanceController @Inject() (
   val controllerComponents: ControllerComponents,
-  auth: AuthorizationActionFilter
-) extends BalanceActions(using auth, BalanceDetailService),
+  auth: AuthorizationActionFilter,
+  service: BalanceDetailService
+) extends BalanceActions(using auth, service),
       BackendBaseController,
       Logging

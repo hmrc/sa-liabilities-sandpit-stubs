@@ -19,12 +19,19 @@ package uk.gov.hmrc.saliabilitiessandpitstubs.config
 import com.google.inject.AbstractModule
 import uk.gov.hmrc.saliabilitiessandpitstubs.controllers.BalanceController
 import uk.gov.hmrc.saliabilitiessandpitstubs.controllers.action.AuthorizationActionFilter
+import uk.gov.hmrc.saliabilitiessandpitstubs.generator.{BalanceDetailGenerator, DefaultBalanceDetailGenerator}
+import uk.gov.hmrc.saliabilitiessandpitstubs.service.{BalanceDetailService, DefaultBalanceDetailService}
+
+import scala.util.Random
 
 class Module extends AbstractModule {
 
   override def configure(): Unit = {
     bind(classOf[AppConfig]).asEagerSingleton()
     bind(classOf[BalanceController]).asEagerSingleton()
+    bind(classOf[BalanceDetailGenerator]).to(classOf[DefaultBalanceDetailGenerator]).asEagerSingleton()
+    bind(classOf[BalanceDetailService]).to(classOf[DefaultBalanceDetailService]).asEagerSingleton()
     bind(classOf[AuthorizationActionFilter]).toProvider(classOf[AuthActionProvider]).asEagerSingleton()
+    bind(classOf[Random]).toProvider(classOf[RandomProvider]).asEagerSingleton()
   }
 }

@@ -14,13 +14,13 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.saliabilitiessandpitstubs.config
+package uk.gov.hmrc.saliabilitiessandpitstubs
 
-import play.api.Configuration
+import uk.gov.hmrc.saliabilitiessandpitstubs.time.LocalDateExtensions
 
 import javax.inject.Inject
+import scala.util.Random
 
-class AppConfig @Inject() (config: Configuration):
-  val appName: String                     = config.get[String]("appName")
-  val bearerAuthorisationEnabled: Boolean = config.get[Boolean]("feature-toggles.new-auth-check-enabled")
-  val randomSeed: Option[Int]             = config.get[Option[Int]]("random.seed")
+package object generator:
+  case class DefaultBalanceDetailGenerator @Inject() (random: Random)
+      extends BalanceDetailGenerator(using LocalDateExtensions, random)
