@@ -14,17 +14,12 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.saliabilitiessandpitstubs.service
+package uk.gov.hmrc.saliabilitiessandpitstubs
 
 import uk.gov.hmrc.saliabilitiessandpitstubs.generator.BalanceDetailGenerator
-import uk.gov.hmrc.saliabilitiessandpitstubs.models.{BalanceDetail, *}
 
-trait BalanceDetailService(using generator: BalanceDetailGenerator):
-  val balanceDetailsByNino: String => Option[BalanceDetail | Seq[BalanceDetail]] = details.get
+import javax.inject.Inject
 
-  private val details: Map[String, BalanceDetail | Seq[BalanceDetail]] = Map(
-    "AA000000A" -> generator.generate,
-    "AA000000B" -> generator.generate,
-    "AA000000C" -> Seq.fill(2)(generator.generate),
-    "AA000000D" -> Seq.fill(4)(generator.generate)
-  )
+package object service:
+  case class DefaultBalanceDetailService @Inject() (generator: BalanceDetailGenerator)
+      extends BalanceDetailService(using generator)

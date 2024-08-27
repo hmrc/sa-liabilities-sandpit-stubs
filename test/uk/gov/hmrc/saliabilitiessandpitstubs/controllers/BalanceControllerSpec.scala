@@ -22,13 +22,21 @@ import play.api.http.Status
 import play.api.mvc.ControllerComponents
 import play.api.test.Helpers.*
 import play.api.test.{FakeRequest, Helpers}
+import uk.gov.hmrc.saliabilitiessandpitstubs.controllers.action.AuthorizationActionFilter.OpenAuthAction
 import uk.gov.hmrc.saliabilitiessandpitstubs.controllers.action.DefaultOpenAuthAction
+import uk.gov.hmrc.saliabilitiessandpitstubs.generator.DefaultBalanceDetailGenerator
+import uk.gov.hmrc.saliabilitiessandpitstubs.service.{BalanceDetailService, DefaultBalanceDetailService}
+
+import scala.util.Random
 
 class BalanceControllerSpec extends AnyWordSpec with Matchers {
 
   private val fakeRequest                      = FakeRequest("GET", "/AA000000A")
+  private val random: Random                   = new Random()
   private val components: ControllerComponents = Helpers.stubControllerComponents()
-  private val controller                       = new BalanceController(components, new DefaultOpenAuthAction(components.executionContext))
+  private val auth: OpenAuthAction             = new DefaultOpenAuthAction(components.executionContext)
+  private val service: BalanceDetailService    = DefaultBalanceDetailService(DefaultBalanceDetailGenerator(random))
+  private val controller                       = new BalanceController(components, auth, service)
 
   "GET /balance/AA000000A" should {
     "return 200" in {

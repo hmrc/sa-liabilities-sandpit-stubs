@@ -17,11 +17,11 @@
 //noinspection ScalaFileName
 package uk.gov.hmrc.saliabilitiessandpitstubs.config
 
-import com.google.inject.Provider
 import uk.gov.hmrc.saliabilitiessandpitstubs.controllers.action.{AuthorizationActionFilter, DefaultOpenAuthAction, DefaultTokenBasedAction}
 
-import javax.inject.Inject
+import javax.inject.{Inject, Provider}
 import scala.concurrent.ExecutionContext
+import scala.util.Random
 
 class AuthActionProvider @Inject() (config: AppConfig, executionContext: ExecutionContext)
     extends Provider[AuthorizationActionFilter]:
@@ -29,3 +29,6 @@ class AuthActionProvider @Inject() (config: AppConfig, executionContext: Executi
     (if config.bearerAuthorisationEnabled then classOf[DefaultTokenBasedAction] else classOf[DefaultOpenAuthAction])
       .getConstructor(classOf[ExecutionContext])
       .newInstance(executionContext)
+
+class RandomProvider @Inject() (config: AppConfig) extends Provider[Random]:
+  val get: Random = (config.randomSeed fold Random())(Random(_))
