@@ -23,4 +23,4 @@ import scala.util.Random
 
 package object generator:
   case class DefaultBalanceDetailGenerator @Inject() (random: Random)
-      extends BalanceDetailGenerator(using LocalDateExtensions, random)
+      extends BalanceDetailGenerator(using LocalDateExtensions)(random)
