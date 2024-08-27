@@ -31,4 +31,4 @@ class AuthActionProvider @Inject() (config: AppConfig, executionContext: Executi
       .newInstance(executionContext)
 
 class RandomProvider @Inject() (config: AppConfig) extends Provider[Random]:
-  val get: Random = if config.randomSeed.isEmpty then Random() else Random(config.randomSeed.get)
+  val get: Random = (config.randomSeed fold Random())(Random(_))
