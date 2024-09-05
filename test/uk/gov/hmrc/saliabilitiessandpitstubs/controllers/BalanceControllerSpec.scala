@@ -36,7 +36,7 @@ class BalanceControllerSpec extends AnyWordSpec with Matchers {
   private val components: ControllerComponents = Helpers.stubControllerComponents()
   private val auth: OpenAuthAction             = new DefaultOpenAuthAction(components.executionContext)
   private val service: BalanceDetailService    = DefaultBalanceDetailService(DefaultBalanceDetailGenerator(random))
-  private val controller                       = new BalanceController(components, auth, service)
+  private val controller                       = new BalanceController(components)(auth, service)
 
   "GET /balance/AA000000A" should {
     "return 200" in {

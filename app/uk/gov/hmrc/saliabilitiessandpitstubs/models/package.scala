@@ -17,7 +17,7 @@
 package uk.gov.hmrc.saliabilitiessandpitstubs.models
 
 import play.api.libs.json.{Reads, Writes}
-import uk.gov.hmrc.saliabilitiessandpitstubs.json.{StringBasedJsonOps, bigDecimalBasedWrites}
+import uk.gov.hmrc.saliabilitiessandpitstubs.json.{StringBasedJsonOps, bigDecimalBasedReads, bigDecimalBasedWrites}
 
 import java.time.LocalDate
 
@@ -45,19 +45,21 @@ object PayableDueDate extends StringBasedJsonOps[PayableDueDate]:
 object TotalBalance:
   def apply(value: BigDecimal): TotalBalance = value
   given Writes[TotalBalance]                 = bigDecimalBasedWrites(apply)
+  given Reads[TotalBalance]                  = bigDecimalBasedReads
 
 object PayableAmount:
-  def apply(value: BigDecimal): PayableAmount = value
-  given Writes[PayableAmount]                 = bigDecimalBasedWrites(apply)
-
+  def apply(value: BigDecimal): PayableAmount                                         = value
+  given Writes[PayableAmount]                                                         = bigDecimalBasedWrites(apply)
+  given Reads[PayableAmount]                                                          = bigDecimalBasedReads
   extension (amount: PayableAmount) def ++(other: PendingDueAmount): PendingDueAmount = amount + other
 
 object PendingDueAmount:
-  def apply(value: BigDecimal): PendingDueAmount = value
-  given Writes[PendingDueAmount]                 = bigDecimalBasedWrites(apply)
-
+  def apply(value: BigDecimal): PendingDueAmount                                = value
+  given Writes[PendingDueAmount]                                                = bigDecimalBasedWrites(apply)
+  given Reads[PendingDueAmount]                                                 = bigDecimalBasedReads
   extension (amount: PendingDueAmount) def ++(other: OverdueAmount): BigDecimal = amount + other
 
 object OverdueAmount:
   def apply(value: BigDecimal): OverdueAmount = value
   given Writes[OverdueAmount]                 = bigDecimalBasedWrites(apply)
+  given Reads[OverdueAmount]                  = bigDecimalBasedReads
