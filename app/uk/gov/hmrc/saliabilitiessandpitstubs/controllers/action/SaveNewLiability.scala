@@ -24,11 +24,14 @@ import uk.gov.hmrc.saliabilitiessandpitstubs.controllers.action.SaveNewLiability
 import uk.gov.hmrc.saliabilitiessandpitstubs.models.BalanceDetail
 import uk.gov.hmrc.saliabilitiessandpitstubs.service.BalanceDetailService
 
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 import scala.concurrent.Future.*
-import scala.concurrent.ExecutionContext.Implicits.global
 
-private[controllers] trait SaveNewLiability(using auth: AuthorizationActionFilter, service: BalanceDetailService):
+private[controllers] trait SaveNewLiability(using
+  auth: AuthorizationActionFilter,
+  service: BalanceDetailService,
+  executionContext: ExecutionContext
+):
   self: BaseController =>
 
   def saveNewBalanceByNino(nino: String): Action[JsValue] = (Action andThen auth).async(parse.json)(
@@ -47,8 +50,8 @@ private[controllers] trait SaveNewLiability(using auth: AuthorizationActionFilte
     implicit request: Request[AnyContent] =>
       Future(service addOrUpdateGeneratedBalanceDetail nino) map (_ => CreatedNewLiabilityResult)
   }
-  
-  private def handleValidationError: Future[Result]                = successful(InvalidBalanceDetailErrorResult)
+
+  private def handleValidationError: Future[Result] = successful(InvalidBalanceDetailErrorResult)
 
   private def handleSuccess: Future[Result] = successful(CreatedNewLiabilityResult)
 
