@@ -18,6 +18,7 @@ package uk.gov.hmrc.saliabilitiessandpitstubs.controllers
 
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
+import org.scalatestplus.mockito.MockitoSugar.mock
 import play.api.http.Status
 import play.api.mvc.ControllerComponents
 import play.api.test.Helpers.*
@@ -37,7 +38,7 @@ class BalanceControllerSpec extends AnyWordSpec with Matchers {
   given random: Random                         = new Random()
   given executionContext: ExecutionContext     = components.executionContext
   given auth: OpenAuthAction                   = new DefaultOpenAuthAction(executionContext)
-  given service: BalanceDetailService          = DefaultBalanceDetailService(DefaultBalanceDetailGenerator(random))
+  given service: BalanceDetailService          = DefaultBalanceDetailService(DefaultBalanceDetailGenerator(random), mock)
   private val controller                       = new BalanceController(components)
 
   "GET /balance/AA000000A" should {

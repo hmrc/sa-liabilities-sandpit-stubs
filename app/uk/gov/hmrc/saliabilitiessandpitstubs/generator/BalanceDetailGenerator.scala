@@ -16,27 +16,7 @@
 
 package uk.gov.hmrc.saliabilitiessandpitstubs.generator
 
-import uk.gov.hmrc.saliabilitiessandpitstubs.models.*
-import uk.gov.hmrc.saliabilitiessandpitstubs.time.LocalDateExtensions
-import uk.gov.hmrc.saliabilitiessandpitstubs.time.LocalDateExtensions.nextDayInFuture
+import uk.gov.hmrc.saliabilitiessandpitstubs.models.BalanceDetail
 
-import scala.util.Random
-import scala.util.Random.nextInt
-
-trait BalanceDetailGenerator(using LocalDateExtensions)(random: Random):
-
-  private def randomInRange(range: Range): Int =
-    val start = Math.min(range.start, range.end)
-    val end   = Math.max(range.start, range.end)
-
-    start + random.nextInt((end - start) + 1)
-
-  def generate: BalanceDetail =
-    val pendingDueDate   = PendingDueDate(nextDayInFuture(monthsToAdd = 3))
-    val payableDueDate   = PayableDueDate(nextDayInFuture(monthsToAdd = 6))
-    val overdueAmount    = OverdueAmount(randomInRange(0 to 9999))
-    val payableAmount    = PayableAmount(randomInRange(0 to 9999))
-    val pendingDueAmount = PendingDueAmount(randomInRange(0 to 9999))
-    val totalBalance     = TotalBalance(payableAmount ++ pendingDueAmount ++ overdueAmount)
-
-    BalanceDetail(payableAmount, payableDueDate, pendingDueAmount, pendingDueDate, overdueAmount, totalBalance)
+trait BalanceDetailGenerator:
+  def generate: BalanceDetail

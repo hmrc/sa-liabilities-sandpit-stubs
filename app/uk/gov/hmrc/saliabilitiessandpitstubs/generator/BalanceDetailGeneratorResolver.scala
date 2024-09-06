@@ -14,14 +14,20 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.saliabilitiessandpitstubs
+package uk.gov.hmrc.saliabilitiessandpitstubs.generator
 
-import uk.gov.hmrc.saliabilitiessandpitstubs.generator.{BalanceDetailGeneratorResolver, BalanceDetailRandomize}
+import play.api.mvc.{AnyContent, Request}
+import uk.gov.hmrc.saliabilitiessandpitstubs.models.BalanceDetail
 
-import javax.inject.Inject
+trait BalanceDetailGeneratorResolver(using faker: BalanceDetailFaker, randomize: BalanceDetailRandomize):
 
-package object service:
-  case class DefaultBalanceDetailService @Inject() (
-    generator: BalanceDetailRandomize,
-    res: BalanceDetailGeneratorResolver
-  ) extends BalanceDetailService(using generator, res)
+  private val strategies: Map[String, BalanceDetailGenerator] = Map(
+    "fake"      -> faker,
+    "randomize" -> randomize
+  )
+
+  def generate(implicit request: Request[AnyContent]): BalanceDetail =
+    (request.headers get "X-USE-STRATEGY-GENERATION")
+      .flatMap(strategies.get)
+      .getOrElse(randomize)
+      .generate
