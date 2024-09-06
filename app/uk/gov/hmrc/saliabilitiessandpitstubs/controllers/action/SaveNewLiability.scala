@@ -21,6 +21,7 @@ import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.Results.{BadRequest, Created}
 import play.api.mvc.{Action, BaseController, Request, Result}
 import uk.gov.hmrc.saliabilitiessandpitstubs.controllers.action.SaveNewLiability.{CreatedNewLiabilityResult, InvalidBalanceDetailErrorResult}
+import uk.gov.hmrc.saliabilitiessandpitstubs.json.JsValidator
 import uk.gov.hmrc.saliabilitiessandpitstubs.models.BalanceDetail
 import uk.gov.hmrc.saliabilitiessandpitstubs.service.BalanceDetailService
 
@@ -29,14 +30,15 @@ import scala.concurrent.Future.*
 
 private[controllers] trait SaveNewLiability(using
   auth: AuthorizationActionFilter,
-  service: BalanceDetailService
+  service: BalanceDetailService,
+  jsValidator: JsValidator[BalanceDetail]
 ):
   self: BaseController =>
 
   val saveNewBalanceByNino: String => Action[JsValue] = nino =>
     (Action andThen auth async parse.json)(
       (_: Request[JsValue]).body
-        .validate[BalanceDetail]
+        .validate(jsValidator.validate)
         .fold(
           errors => handleValidationError,
           balanceDetail => {

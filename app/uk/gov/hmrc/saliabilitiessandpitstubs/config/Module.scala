@@ -17,10 +17,12 @@
 package uk.gov.hmrc.saliabilitiessandpitstubs.config
 
 import com.github.javafaker.Faker
-import com.google.inject.AbstractModule
+import com.google.inject.{AbstractModule, TypeLiteral}
 import uk.gov.hmrc.saliabilitiessandpitstubs.controllers.BalanceController
 import uk.gov.hmrc.saliabilitiessandpitstubs.controllers.action.AuthorizationActionFilter
 import uk.gov.hmrc.saliabilitiessandpitstubs.generator.*
+import uk.gov.hmrc.saliabilitiessandpitstubs.json.JsValidator
+import uk.gov.hmrc.saliabilitiessandpitstubs.models.BalanceDetail
 import uk.gov.hmrc.saliabilitiessandpitstubs.service.{BalanceDetailService, DefaultBalanceDetailService}
 
 import scala.util.Random
@@ -36,6 +38,12 @@ class Module extends AbstractModule {
     bind(classOf[BalanceDetailService]).to(classOf[DefaultBalanceDetailService]).asEagerSingleton()
     bind(classOf[AuthorizationActionFilter]).toProvider(classOf[AuthActionProvider]).asEagerSingleton()
     bind(classOf[BalanceDetailRandomize]).to(classOf[DefaultBalanceDetailGenerator]).asEagerSingleton()
+    bind(classOf[BalanceDetailInitialGeneratorResolver])
+      .to(classOf[DefaultBalanceDetailInitialGeneratorResolver])
+      .asEagerSingleton()
     bind(classOf[BalanceDetailGeneratorResolver]).to(classOf[DefaultBalanceDetailGeneratorResolver]).asEagerSingleton()
+    bind(new TypeLiteral[JsValidator[BalanceDetail]]() {})
+      .toProvider(classOf[BalanceDetailValidatorRequestProvider])
+      .asEagerSingleton()
   }
 }

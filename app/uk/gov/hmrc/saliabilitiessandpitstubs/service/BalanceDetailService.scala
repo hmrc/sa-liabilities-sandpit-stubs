@@ -17,10 +17,10 @@
 package uk.gov.hmrc.saliabilitiessandpitstubs.service
 
 import play.api.mvc.{AnyContent, Request}
-import uk.gov.hmrc.saliabilitiessandpitstubs.generator.{BalanceDetailGeneratorResolver, BalanceDetailRandomize}
+import uk.gov.hmrc.saliabilitiessandpitstubs.generator.{BalanceDetailGeneratorResolver, BalanceDetailInitialGeneratorResolver, BalanceDetailRandomize}
 import uk.gov.hmrc.saliabilitiessandpitstubs.models.*
 
-trait BalanceDetailService(using generator: BalanceDetailRandomize, res: BalanceDetailGeneratorResolver):
+trait BalanceDetailService(using generator: BalanceDetailInitialGeneratorResolver, res: BalanceDetailGeneratorResolver):
 
   private var details: Map[String, BalanceDetail | Seq[BalanceDetail]] = Map(
     "AA000000A" -> generator.generate,

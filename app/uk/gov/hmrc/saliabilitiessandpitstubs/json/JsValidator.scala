@@ -14,14 +14,9 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.saliabilitiessandpitstubs
+package uk.gov.hmrc.saliabilitiessandpitstubs.json
 
-import uk.gov.hmrc.saliabilitiessandpitstubs.generator.{BalanceDetailGeneratorResolver, BalanceDetailInitialGeneratorResolver, BalanceDetailRandomize}
+import play.api.libs.json.{JsResult, JsValue}
 
-import javax.inject.Inject
-
-package object service:
-  case class DefaultBalanceDetailService @Inject() (
-    generator: BalanceDetailInitialGeneratorResolver,
-    res: BalanceDetailGeneratorResolver
-  ) extends BalanceDetailService(using generator, res)
+trait JsValidator[T]:
+  def validate(json: JsValue): JsResult[T]
