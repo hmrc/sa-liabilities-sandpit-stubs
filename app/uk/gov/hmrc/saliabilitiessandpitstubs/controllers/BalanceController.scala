@@ -21,13 +21,21 @@ import play.api.mvc.*
 import uk.gov.hmrc.play.bootstrap.backend.controller.BackendBaseController
 import uk.gov.hmrc.saliabilitiessandpitstubs.controllers.action.{AuthorizationActionFilter, BalanceActions, SaveNewLiability}
 import uk.gov.hmrc.saliabilitiessandpitstubs.service.BalanceDetailService
+import uk.gov.hmrc.saliabilitiessandpitstubs.utils.DelaySimulator
 
 import javax.inject.Inject
+import scala.concurrent.ExecutionContext
+import scala.util.Random
 
 class BalanceController @Inject() (
   val controllerComponents: ControllerComponents
-)(implicit val auth: AuthorizationActionFilter, service: BalanceDetailService)
-    extends BalanceActions,
+)(implicit
+  val auth: AuthorizationActionFilter,
+  service: BalanceDetailService,
+  random: Random,
+  executionContext: ExecutionContext
+) extends BalanceActions,
       SaveNewLiability,
       BackendBaseController,
+      DelaySimulator,
       Logging

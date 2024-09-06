@@ -27,16 +27,18 @@ import uk.gov.hmrc.saliabilitiessandpitstubs.controllers.action.DefaultOpenAuthA
 import uk.gov.hmrc.saliabilitiessandpitstubs.generator.DefaultBalanceDetailGenerator
 import uk.gov.hmrc.saliabilitiessandpitstubs.service.{BalanceDetailService, DefaultBalanceDetailService}
 
+import scala.concurrent.ExecutionContext
 import scala.util.Random
 
 class BalanceControllerSpec extends AnyWordSpec with Matchers {
 
   private val fakeRequest                      = FakeRequest("GET", "/AA000000A")
-  private val random: Random                   = new Random()
   private val components: ControllerComponents = Helpers.stubControllerComponents()
-  private val auth: OpenAuthAction             = new DefaultOpenAuthAction(components.executionContext)
-  private val service: BalanceDetailService    = DefaultBalanceDetailService(DefaultBalanceDetailGenerator(random))
-  private val controller                       = new BalanceController(components)(auth, service)
+  given random: Random                         = new Random()
+  given executionContext: ExecutionContext     = components.executionContext
+  given auth: OpenAuthAction                   = new DefaultOpenAuthAction(executionContext)
+  given service: BalanceDetailService          = DefaultBalanceDetailService(DefaultBalanceDetailGenerator(random))
+  private val controller                       = new BalanceController(components)
 
   "GET /balance/AA000000A" should {
     "return 200" in {

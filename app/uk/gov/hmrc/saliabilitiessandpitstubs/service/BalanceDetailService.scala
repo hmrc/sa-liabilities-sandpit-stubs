@@ -35,3 +35,5 @@ trait BalanceDetailService(using generator: BalanceDetailGenerator):
       case Some(existingDetail: BalanceDetail)       => details + (nino -> Seq(existingDetail, balanceDetail))
       case Some(existingDetails: Seq[BalanceDetail]) => details + (nino -> (existingDetails :+ balanceDetail))
       case None                                      => details + (nino -> balanceDetail)
+
+  val addOrUpdateGeneratedBalanceDetail: String => Unit = addOrUpdateBalanceDetail(_: String, generator.generate)

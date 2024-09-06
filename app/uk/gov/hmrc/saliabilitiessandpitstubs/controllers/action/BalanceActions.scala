@@ -16,27 +16,23 @@
 
 package uk.gov.hmrc.saliabilitiessandpitstubs.controllers.action
 
-import play.api.Logging
 import play.api.libs.json.Json
-import play.api.mvc.{Action, AnyContent, BaseController, Request}
+import play.api.mvc.Results.NotFound
+import play.api.mvc.{Action, AnyContent, BaseController, Request, Result}
+import uk.gov.hmrc.saliabilitiessandpitstubs.controllers.action.BalanceActions.BalanceLiabilityNotFoundResult
 import uk.gov.hmrc.saliabilitiessandpitstubs.service.BalanceDetailService
+import uk.gov.hmrc.saliabilitiessandpitstubs.utils.DelaySimulator
 
-import scala.concurrent.Future
-import scala.concurrent.Future.successful
-
-private[controllers] trait BalanceActions(using auth: AuthorizationActionFilter, service: BalanceDetailService) {
-  self: BaseController & Logging =>
+private[controllers] trait BalanceActions(using auth: AuthorizationActionFilter, service: BalanceDetailService):
+  self: BaseController & DelaySimulator =>
 
   def getBalanceByNino(nino: String): Action[AnyContent] = (Action andThen auth).async { implicit request: Request[_] =>
-    logger.debug(s"Looking up balance for NINO: $nino")
-    service.balanceDetailsByNino(nino) match {
-      case Some(balance) =>
-        logger.debug(s"Found balance for NINO $nino: $balance")
-        successful(Ok(balance))
-      case None          =>
-        logger.debug(s"No balance found for NINO $nino")
-        val notFoundResult = NotFound(Json.obj("error" -> s"No balance found for NINO $nino"))
-        successful(notFoundResult)
+    simulateNetworkConditions {
+      service.balanceDetailsByNino(nino) match
+        case Some(balance) => Ok(balance)
+        case None          => BalanceLiabilityNotFoundResult
     }
   }
-}
+
+object BalanceActions:
+  val BalanceLiabilityNotFoundResult: Result = NotFound(Json.obj("error" -> s"No balance found"))
