@@ -20,11 +20,18 @@ import uk.gov.hmrc.saliabilitiessandpitstubs.generator.BalanceDetailGenerator
 import uk.gov.hmrc.saliabilitiessandpitstubs.models.{BalanceDetail, *}
 
 trait BalanceDetailService(using generator: BalanceDetailGenerator):
-  val balanceDetailsByNino: String => Option[BalanceDetail | Seq[BalanceDetail]] = details.get
 
-  private val details: Map[String, BalanceDetail | Seq[BalanceDetail]] = Map(
+  private var details: Map[String, BalanceDetail | Seq[BalanceDetail]] = Map(
     "AA000000A" -> generator.generate,
     "AA000000B" -> generator.generate,
     "AA000000C" -> Seq.fill(2)(generator.generate),
     "AA000000D" -> Seq.fill(4)(generator.generate)
   )
+
+  val balanceDetailsByNino: String => Option[BalanceDetail | Seq[BalanceDetail]] = details.get(_: String)
+
+  val addOrUpdateBalanceDetail: (String, BalanceDetail) => Unit = (nino: String, balanceDetail: BalanceDetail) =>
+    details = details.get(nino) match
+      case Some(existingDetail: BalanceDetail)       => details + (nino -> Seq(existingDetail, balanceDetail))
+      case Some(existingDetails: Seq[BalanceDetail]) => details + (nino -> (existingDetails :+ balanceDetail))
+      case None                                      => details + (nino -> balanceDetail)

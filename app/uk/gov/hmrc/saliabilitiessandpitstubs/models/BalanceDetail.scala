@@ -18,7 +18,8 @@ package uk.gov.hmrc.saliabilitiessandpitstubs.models
 
 import play.api.http.{ContentTypes, Writeable}
 import play.api.libs.json.*
-import play.api.libs.json.Json.{toJson, writes}
+import play.api.libs.json.Json.toJson
+import uk.gov.hmrc.saliabilitiessandpitstubs.json.{StringBasedJsonOps, bigDecimalBasedReads, bigDecimalBasedWrites}
 import uk.gov.hmrc.saliabilitiessandpitstubs.models.*
 
 import scala.annotation.targetName
@@ -34,7 +35,7 @@ case class BalanceDetail(
 )
 
 object BalanceDetail:
-  given OWrites[BalanceDetail] = writes[BalanceDetail]
+  given Format[BalanceDetail] = Json.format[BalanceDetail]
 
   @targetName("UnionOfWriteableIterableBalanceDetail")
   given Writeable[Iterable[BalanceDetail] | BalanceDetail] =

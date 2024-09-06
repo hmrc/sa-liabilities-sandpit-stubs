@@ -22,8 +22,10 @@ import java.time.LocalDate
 
 package object json:
   def bigDecimalBasedWrites[T](f: T => BigDecimal): Writes[T] = Writes.BigDecimalWrites.contramap(f)
+  def bigDecimalBasedReads: Reads[BigDecimal]                 = (json: JsValue) => json.validate[BigDecimal]
 
   trait StringBasedJsonOps[T]:
     def apply(value: String | LocalDate): T
     def valueOf(t: T): String
-    given Writes[T] = Writes[T](t => Json.toJson(valueOf(t)))
+    given Writes[T] = Writes.StringWrites.contramap(valueOf)
+    given Reads[T]  = Reads.StringReads.map(apply)
