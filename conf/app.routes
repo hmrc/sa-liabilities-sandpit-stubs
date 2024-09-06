@@ -1,4 +1,5 @@
 # microservice specific routes
 
 GET        /balance/:nino             uk.gov.hmrc.saliabilitiessandpitstubs.controllers.BalanceController.getBalanceByNino(nino: String)
-POST       /balance/:nino             uk.gov.hmrc.saliabilitiessandpitstubs.controllers.BalanceController.saveNewBalanceByNino(nino: String)
+PUT        /balance/:nino             uk.gov.hmrc.saliabilitiessandpitstubs.controllers.BalanceController.saveNewBalanceByNino(nino: String)
+POST       /balance/:nino             uk.gov.hmrc.saliabilitiessandpitstubs.controllers.BalanceController.saveGeneratedBalanceByNino(nino: String)

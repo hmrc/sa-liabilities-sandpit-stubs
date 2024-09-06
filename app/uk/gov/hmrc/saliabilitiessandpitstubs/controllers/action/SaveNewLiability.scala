@@ -19,13 +19,14 @@ package uk.gov.hmrc.saliabilitiessandpitstubs.controllers.action
 import play.api.libs.json.Json.obj
 import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.Results.{BadRequest, Created}
-import play.api.mvc.{Action, BaseController, Request, Result}
+import play.api.mvc.{Action, AnyContent, BaseController, Request, Result}
 import uk.gov.hmrc.saliabilitiessandpitstubs.controllers.action.SaveNewLiability.{CreatedNewLiabilityResult, InvalidBalanceDetailErrorResult}
 import uk.gov.hmrc.saliabilitiessandpitstubs.models.BalanceDetail
 import uk.gov.hmrc.saliabilitiessandpitstubs.service.BalanceDetailService
 
 import scala.concurrent.Future
 import scala.concurrent.Future.*
+import scala.concurrent.ExecutionContext.Implicits.global
 
 private[controllers] trait SaveNewLiability(using auth: AuthorizationActionFilter, service: BalanceDetailService):
   self: BaseController =>
@@ -42,7 +43,12 @@ private[controllers] trait SaveNewLiability(using auth: AuthorizationActionFilte
       )
   )
 
-  private def handleValidationError: Future[Result] = successful(InvalidBalanceDetailErrorResult)
+  def saveGeneratedBalanceByNino(nino: String): Action[AnyContent] = Action andThen auth async {
+    implicit request: Request[AnyContent] =>
+      Future(service addOrUpdateGeneratedBalanceDetail nino) map (_ => CreatedNewLiabilityResult)
+  }
+  
+  private def handleValidationError: Future[Result]                = successful(InvalidBalanceDetailErrorResult)
 
   private def handleSuccess: Future[Result] = successful(CreatedNewLiabilityResult)
 
