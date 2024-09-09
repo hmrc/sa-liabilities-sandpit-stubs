@@ -20,6 +20,8 @@ import play.api.Logging
 import play.api.mvc.*
 import uk.gov.hmrc.play.bootstrap.backend.controller.BackendBaseController
 import uk.gov.hmrc.saliabilitiessandpitstubs.controllers.action.{AuthorizationActionFilter, BalanceActions, SaveNewLiability}
+import uk.gov.hmrc.saliabilitiessandpitstubs.http.Streamliner
+import uk.gov.hmrc.saliabilitiessandpitstubs.models.BalanceDetail
 import uk.gov.hmrc.saliabilitiessandpitstubs.service.BalanceDetailService
 import uk.gov.hmrc.saliabilitiessandpitstubs.utils.DelaySimulator
 
@@ -36,6 +38,7 @@ class BalanceController @Inject() (
   executionContext: ExecutionContext
 ) extends BalanceActions,
       SaveNewLiability,
+      Streamliner[BalanceDetail],
       BackendBaseController,
       DelaySimulator,
       Logging

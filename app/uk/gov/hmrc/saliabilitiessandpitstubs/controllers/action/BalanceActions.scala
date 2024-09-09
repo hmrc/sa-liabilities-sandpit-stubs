@@ -16,21 +16,24 @@
 
 package uk.gov.hmrc.saliabilitiessandpitstubs.controllers.action
 
-import play.api.libs.json.Json
+import play.api.libs.json.{Json, Writes}
 import play.api.mvc.Results.NotFound
-import play.api.mvc.{Action, AnyContent, BaseController, Request, Result}
+import play.api.mvc.*
 import uk.gov.hmrc.saliabilitiessandpitstubs.controllers.action.BalanceActions.BalanceLiabilityNotFoundResult
+import uk.gov.hmrc.saliabilitiessandpitstubs.http.Streamliner
+import uk.gov.hmrc.saliabilitiessandpitstubs.models.BalanceDetail
 import uk.gov.hmrc.saliabilitiessandpitstubs.service.BalanceDetailService
 import uk.gov.hmrc.saliabilitiessandpitstubs.utils.DelaySimulator
 
 private[controllers] trait BalanceActions(using auth: AuthorizationActionFilter, service: BalanceDetailService):
-  self: BaseController & DelaySimulator =>
+  self: BaseController & DelaySimulator & Streamliner[BalanceDetail] =>
 
   def getBalanceByNino(nino: String): Action[AnyContent] = (Action andThen auth).async { implicit request: Request[_] =>
     simulateNetworkConditions {
       service.balanceDetailsByNino(nino) match
-        case Some(balance) => Ok(balance)
-        case None          => BalanceLiabilityNotFoundResult
+        case Some(balanceDetails: Seq[BalanceDetail]) => Ok.sendEntity(marschal(balanceDetails))
+        case Some(balance: BalanceDetail)             => Ok(balance)
+        case None                                     => BalanceLiabilityNotFoundResult
     }
   }
 
