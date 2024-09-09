@@ -14,13 +14,17 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.saliabilitiessandpitstubs.validator
+package uk.gov.hmrc.saliabilitiessandpitstubs.time
 
-import play.api.libs.json.{JsResult, JsValue}
-import uk.gov.hmrc.saliabilitiessandpitstubs.json.JsValidator
-import uk.gov.hmrc.saliabilitiessandpitstubs.models.BalanceDetail
+import java.time.LocalDate
+import java.time.temporal.*
+import java.time.temporal.ChronoUnit.DAYS
+import scala.util.Random
 
-object ModelBasedBalanceDetailValidator extends JsValidator[BalanceDetail]:
+trait FutureDateGenerator(using localDate: SystemLocalDate, random: Random):
 
-  override def validate(json: JsValue): JsResult[BalanceDetail] =
-    json.validate[BalanceDetail]
+  def nextDayInFuture(monthsToAdd: Int): LocalDate =
+    val startDate = localDate.now
+    val endDate   = startDate.plusMonths(monthsToAdd)
+    val days      = DAYS.between(startDate, endDate).toInt
+    startDate.plusDays(random.nextInt(days + 1))

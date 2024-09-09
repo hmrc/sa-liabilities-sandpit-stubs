@@ -18,26 +18,24 @@ package uk.gov.hmrc.saliabilitiessandpitstubs
 
 import com.github.javafaker.Faker
 import uk.gov.hmrc.saliabilitiessandpitstubs.config.AppConfig
-import uk.gov.hmrc.saliabilitiessandpitstubs.time.{FakerExtensions, LocalDateExtensions}
+import uk.gov.hmrc.saliabilitiessandpitstubs.time.{FakerExtensions, FutureDateGenerator, SystemLocalDate}
 
 import javax.inject.Inject
 import scala.util.Random
 
 package object generator:
-  case class DefaultBalanceDetailGenerator @Inject() (random: Random)
-      extends BalanceDetailRandomize(using LocalDateExtensions)(random)
+  class DefaultBalanceDetailGenerator @Inject() ()(using FutureDateGenerator, Random) extends BalanceDetailRandomize
 
-  case class DefaultBalanceDetailFaker @Inject() ()(using faker: Faker) extends BalanceDetailFaker, FakerExtensions
+  class DefaultBalanceDetailFaker @Inject() ()(using Faker) extends BalanceDetailFaker, FakerExtensions
 
-  case class DefaultBalanceDetailGeneratorResolver @Inject() ()(using
-    faker: BalanceDetailFaker,
-    randomize: BalanceDetailRandomize,
-    config: AppConfig
-  ) extends BalanceDetailGeneratorResolver
-      with BalanceDetailGeneratorBackendHeaderCarrierProvider(using config.defaultGenerationHeader)
+  class DefaultBalanceDetailGeneratorResolver @Inject() (config: AppConfig)(using
+    BalanceDetailFaker,
+    BalanceDetailRandomize
+  ) extends BalanceDetailGeneratorResolver,
+        BalanceDetailGeneratorBackendHeaderCarrierProvider(using config.defaultGenerationHeader)
 
-  case class DefaultBalanceDetailInitialGeneratorResolver @Inject() ()(using
-    faker: BalanceDetailFaker,
-    randomize: BalanceDetailRandomize,
-    config: AppConfig
+  class DefaultBalanceDetailInitialGeneratorResolver @Inject() ()(using
+    BalanceDetailFaker,
+    BalanceDetailRandomize,
+    AppConfig
   ) extends BalanceDetailInitialGeneratorResolver

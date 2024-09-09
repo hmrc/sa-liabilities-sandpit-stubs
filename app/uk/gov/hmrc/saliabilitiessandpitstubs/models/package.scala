@@ -29,17 +29,15 @@ opaque type PendingDueAmount = BigDecimal
 opaque type OverdueAmount    = BigDecimal
 
 object PendingDueDate extends StringBasedJsonOps[PendingDueDate]:
-  def apply(value: String | LocalDate): PendingDueDate = value match {
+  def apply(value: String | LocalDate): PendingDueDate = value match
     case date: LocalDate => date.toString
     case str: String     => str
-  }
   def valueOf(pendingDueDate: PendingDueDate): String  = pendingDueDate
 
 object PayableDueDate extends StringBasedJsonOps[PayableDueDate]:
-  def apply(value: String | LocalDate): PayableDueDate = value match {
+  def apply(value: String | LocalDate): PayableDueDate = value match
     case date: LocalDate => date.toString
     case str: String     => str
-  }
   def valueOf(payableDueDate: PayableDueDate): String  = payableDueDate
 
 object TotalBalance:

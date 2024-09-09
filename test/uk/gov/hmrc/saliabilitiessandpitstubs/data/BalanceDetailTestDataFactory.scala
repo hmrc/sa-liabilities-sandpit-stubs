@@ -14,13 +14,19 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.saliabilitiessandpitstubs.validator
+package uk.gov.hmrc.saliabilitiessandpitstubs.data
 
-import play.api.libs.json.{JsResult, JsValue}
-import uk.gov.hmrc.saliabilitiessandpitstubs.json.JsValidator
-import uk.gov.hmrc.saliabilitiessandpitstubs.models.BalanceDetail
+import uk.gov.hmrc.saliabilitiessandpitstubs.models.*
 
-object ModelBasedBalanceDetailValidator extends JsValidator[BalanceDetail]:
+object BalanceDetailTestDataFactory {
 
-  override def validate(json: JsValue): JsResult[BalanceDetail] =
-    json.validate[BalanceDetail]
+  val aValidBalanceDetail: BalanceDetail = BalanceDetail(
+    payableAmount = PayableAmount(BigDecimal(100.00)),
+    payableDueDate = PayableDueDate("2024-07-20"),
+    pendingDueAmount = PendingDueAmount(BigDecimal(100.02)),
+    pendingDueDate = PendingDueDate("2024-08-20"),
+    overdueAmount = OverdueAmount(BigDecimal(100.03)),
+    totalBalance = TotalBalance(BigDecimal(300.5))
+  )
+
+}

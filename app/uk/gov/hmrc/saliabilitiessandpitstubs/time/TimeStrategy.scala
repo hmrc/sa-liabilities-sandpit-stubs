@@ -16,17 +16,21 @@
 
 package uk.gov.hmrc.saliabilitiessandpitstubs.time
 
-import java.time.LocalDate
-import java.time.temporal.*
-import java.time.temporal.ChronoUnit.DAYS
-import scala.util.Random
+import com.typesafe.config.Config
+import play.api.{ConfigLoader, Configuration}
 
-trait LocalDateExtensions:
+enum TimeStrategy:
+  case Fake, Live
 
-  def nextDayInFuture(monthsToAdd: Int): LocalDate =
-    val startDate = LocalDate.now()
-    val endDate   = startDate.plusMonths(monthsToAdd)
-    val days      = DAYS.between(startDate, endDate).toInt
-    startDate.plusDays(Random.nextInt(days + 1))
+  def isFake: Boolean = this == Fake
 
-object LocalDateExtensions extends LocalDateExtensions
+object TimeStrategy:
+
+  def loadStrategy(strategyString: String): Option[TimeStrategy] =
+    TimeStrategy.values.find(_.toString.toLowerCase == strategyString.toLowerCase)
+
+  implicit val strategyConfigLoader: ConfigLoader[TimeStrategy] = (config: Config, prefix: String) =>
+    Configuration(config).get[String](prefix) match
+      case "fake" => TimeStrategy.Fake
+      case "live" => TimeStrategy.Live
+      case other  => throw new IllegalArgumentException(s"Invalid time strategy: $other")

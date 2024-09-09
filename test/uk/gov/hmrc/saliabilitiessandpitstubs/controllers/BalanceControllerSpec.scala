@@ -27,10 +27,13 @@ import play.api.test.{FakeRequest, Helpers}
 import uk.gov.hmrc.saliabilitiessandpitstubs.config.AppConfig
 import uk.gov.hmrc.saliabilitiessandpitstubs.controllers.action.AuthorizationActionFilter.OpenAuthAction
 import uk.gov.hmrc.saliabilitiessandpitstubs.controllers.action.DefaultOpenAuthAction
-import uk.gov.hmrc.saliabilitiessandpitstubs.generator.{BalanceDetailFaker, BalanceDetailRandomize, DefaultBalanceDetailFaker, DefaultBalanceDetailGenerator, DefaultBalanceDetailInitialGeneratorResolver}
+import uk.gov.hmrc.saliabilitiessandpitstubs.data.BalanceDetailTestDataFactory.aValidBalanceDetail
+import uk.gov.hmrc.saliabilitiessandpitstubs.generator.{BalanceDetailFaker, BalanceDetailGeneratorResolver, BalanceDetailInitialGeneratorResolver, BalanceDetailRandomize, DefaultBalanceDetailFaker, DefaultBalanceDetailGenerator, DefaultBalanceDetailInitialGeneratorResolver}
 import uk.gov.hmrc.saliabilitiessandpitstubs.json.JsValidator
-import uk.gov.hmrc.saliabilitiessandpitstubs.models.BalanceDetail
+import uk.gov.hmrc.saliabilitiessandpitstubs.models.{BalanceDetail, *}
+import uk.gov.hmrc.saliabilitiessandpitstubs.repository.{BalanceDetailRepository, InMemoryBalanceDetailRepository}
 import uk.gov.hmrc.saliabilitiessandpitstubs.service.{BalanceDetailService, DefaultBalanceDetailService}
+import uk.gov.hmrc.saliabilitiessandpitstubs.time.{DefaultFutureDateGenerator, FutureDateGenerator, StubbedSystemLocalDate, SystemLocalDate}
 import uk.gov.hmrc.saliabilitiessandpitstubs.validator.ModelBasedBalanceDetailValidator
 
 import scala.concurrent.ExecutionContext
@@ -38,22 +41,20 @@ import scala.util.Random
 
 class BalanceControllerSpec extends AnyWordSpec with Matchers {
 
-  private val fakeRequest                              = FakeRequest("GET", "/AA000000A")
-  private val components: ControllerComponents         = Helpers.stubControllerComponents()
-  given random: Random                                 = new Random()
-  given faker: Faker                                   = new Faker()
-  given balanceDetailFaker: BalanceDetailFaker         = new DefaultBalanceDetailFaker
-  given balanceDetailRandomize: BalanceDetailRandomize = DefaultBalanceDetailGenerator(random)
-  given app: AppConfig                                 = mock
-  given executionContext: ExecutionContext             = components.executionContext
-  given jsValidator: JsValidator[BalanceDetail]        = new ModelBasedBalanceDetailValidator()
-  given auth: OpenAuthAction                           = new DefaultOpenAuthAction(executionContext)
-  given service: BalanceDetailService                  =
-    DefaultBalanceDetailService(new DefaultBalanceDetailInitialGeneratorResolver, mock)
-  private val controller                               = new BalanceController(components)
+  private val fakeRequest                      = FakeRequest("GET", "/AA000000A")
+  private val components: ControllerComponents = Helpers.stubControllerComponents()
+  given random: Random                         = Random(42)
+  given executionContext: ExecutionContext     = components.executionContext
+  given JsValidator[BalanceDetail]             = ModelBasedBalanceDetailValidator
+  given auth: OpenAuthAction                   = DefaultOpenAuthAction(executionContext)
+  given BalanceDetailGeneratorResolver         = mock
+  given repo: BalanceDetailRepository          = InMemoryBalanceDetailRepository
+  given BalanceDetailService                   = DefaultBalanceDetailService()
+  private val controller                       = BalanceController(components)
 
   "GET /balance/AA000000A" should {
     "return 200" in {
+      repo.addOrUpdate("AA000000A", aValidBalanceDetail)
       val result = controller.getBalanceByNino("AA000000A")(fakeRequest)
       status(result) shouldBe Status.OK
     }

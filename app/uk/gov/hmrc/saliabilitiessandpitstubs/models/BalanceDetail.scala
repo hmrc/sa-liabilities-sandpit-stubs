@@ -35,6 +35,23 @@ case class BalanceDetail(
 )
 
 object BalanceDetail:
+  def create(
+    payableAmount: String,
+    payableDueDate: String,
+    pendingDueAmount: String,
+    pendingDueDate: String,
+    overdueAmount: String,
+    totalBalance: String
+  ): BalanceDetail =
+    new BalanceDetail(
+      Some(PayableAmount(BigDecimal.apply(payableAmount))),
+      Some(PayableDueDate(payableDueDate)),
+      Some(PendingDueAmount(BigDecimal.apply(pendingDueAmount))),
+      Some(PendingDueDate(pendingDueDate)),
+      Some(OverdueAmount(BigDecimal.apply(overdueAmount))),
+      Some(TotalBalance(BigDecimal.apply(totalBalance)))
+    )
+
   def apply(
     payableAmount: PayableAmount,
     payableDueDate: PayableDueDate,

@@ -14,13 +14,9 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.saliabilitiessandpitstubs.validator
+package uk.gov.hmrc.saliabilitiessandpitstubs.repository
 
-import play.api.libs.json.{JsResult, JsValue}
-import uk.gov.hmrc.saliabilitiessandpitstubs.json.JsValidator
 import uk.gov.hmrc.saliabilitiessandpitstubs.models.BalanceDetail
 
-object ModelBasedBalanceDetailValidator extends JsValidator[BalanceDetail]:
-
-  override def validate(json: JsValue): JsResult[BalanceDetail] =
-    json.validate[BalanceDetail]
+package object source:
+  type Store = Map[String, BalanceDetail | Seq[BalanceDetail]]

@@ -14,13 +14,9 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.saliabilitiessandpitstubs.validator
+package uk.gov.hmrc.saliabilitiessandpitstubs.time
 
-import play.api.libs.json.{JsResult, JsValue}
-import uk.gov.hmrc.saliabilitiessandpitstubs.json.JsValidator
-import uk.gov.hmrc.saliabilitiessandpitstubs.models.BalanceDetail
+import java.time.LocalDate
 
-object ModelBasedBalanceDetailValidator extends JsValidator[BalanceDetail]:
-
-  override def validate(json: JsValue): JsResult[BalanceDetail] =
-    json.validate[BalanceDetail]
+trait SystemLocalDate:
+  def now: LocalDate

@@ -20,6 +20,7 @@ package uk.gov.hmrc.saliabilitiessandpitstubs.config
 import uk.gov.hmrc.saliabilitiessandpitstubs.controllers.action.{AuthorizationActionFilter, DefaultOpenAuthAction, DefaultTokenBasedAction}
 import uk.gov.hmrc.saliabilitiessandpitstubs.json.JsValidator
 import uk.gov.hmrc.saliabilitiessandpitstubs.models.BalanceDetail
+import uk.gov.hmrc.saliabilitiessandpitstubs.time.{LiveSystemLocalDate, StubbedSystemLocalDate, SystemLocalDate}
 import uk.gov.hmrc.saliabilitiessandpitstubs.validator.{BalanceDetailValidator, ModelBasedBalanceDetailValidator}
 
 import javax.inject.{Inject, Provider}
@@ -34,15 +35,13 @@ class AuthActionProvider @Inject() (config: AppConfig, executionContext: Executi
       .newInstance(executionContext)
 
 class RandomProvider @Inject() (config: AppConfig) extends Provider[Random]:
-  val get: Random = (config.randomSeed fold Random())(Random(_))
+  val get: Random = (config.randomSeed fold Random)(Random(_))
+
+class LocalDateProvider @Inject() (config: AppConfig) extends Provider[SystemLocalDate]:
+  override def get(): SystemLocalDate = if config.timeStrategy.isFake then StubbedSystemLocalDate(config.currentDate)
+  else LiveSystemLocalDate
 
 class BalanceDetailValidatorRequestProvider @Inject() (config: AppConfig) extends Provider[JsValidator[BalanceDetail]]:
   val get: JsValidator[BalanceDetail] =
-    if config.balanceDetailValidationEnable then
-      classOf[BalanceDetailValidator]
-        .getConstructor(classOf[Set[String]])
-        .newInstance(Set("pendingDueAmount", "overdueAmount", "payableAmount"))
-    else
-      classOf[ModelBasedBalanceDetailValidator]
-        .getConstructor()
-        .newInstance()
+    if config.balanceDetailValidationEnable then BalanceDetailValidator(config.balanceDetailValidatorFields.toSet)
+    else ModelBasedBalanceDetailValidator
