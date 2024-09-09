@@ -51,34 +51,63 @@ private object WizardAction:
     def getProperty(field: String): String = (request.body.asFormUrlEncoded get field).head
 
   private val html =
-    """
-      |<!DOCTYPE html>
+    """<!DOCTYPE html>
       |<html>
+      |<head>
+      |  <title>Submit Balance Details</title>
+      |  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+      |</head>
       |<body>
-      |  <form action="/stub/submit" method="post">
-      |    <label for="nino">Nino</label>
-      |    <input type="text" id="nino" name="nino" required><br><br>
+      |  <div class="container mt-5">
+      |    <h2 class="text-center">Submit Balance Details</h2>
+      |    <form action="/stub/submit" method="post">
+      |      <div class="form-group">
+      |        <label for="nino">National Insurance Number (NINO):</label>
+      |        <input type="text" id="nino" name="nino" class="form-control" required placeholder="Enter NINO">
+      |      </div>
       |
-      |    <label for="payableAmount">PayableAmount</label>
-      |    <input type="text" id="payableAmount" name="payableAmount"><br><br>
+      |      <div class="row">
+      |        <div class="col-md-6">
+      |          <div class="form-group">
+      |            <label for="payableAmount">Payable Amount:</label>
+      |            <input type="text" id="payableAmount" name="payableAmount" class="form-control" placeholder="Enter the total amount payable">
+      |          </div>
+      |        </div>
+      |        <div class="col-md-6">
+      |          <div class="form-group">
+      |            <label for="payableDueDate">Payable Due Date:</label>
+      |            <input type="date" id="payableDueDate" name="payableDueDate" class="form-control" placeholder="Select the due date for the payable amount">
+      |          </div>
+      |        </div>
+      |      </div>
       |
-      |    <label for="payableDueDate">PayableDueDate</label>
-      |    <input type="text" id="payableDueDate" name="payableDueDate"><br><br>
+      |      <div class="row">
+      |        <div class="col-md-6">
+      |          <div class="form-group">
+      |            <label for="pendingDueAmount">Pending Due Amount:</label>
+      |            <input type="text" id="pendingDueAmount" name="pendingDueAmount" class="form-control" placeholder="Enter the amount currently pending">
+      |          </div>
+      |        </div>
+      |        <div class="col-md-6">
+      |          <div class="form-group">
+      |            <label for="pendingDueDate">Pending Due Date:</label>
+      |            <input type="date" id="pendingDueDate" name="pendingDueDate" class="form-control" placeholder="Select the due date for the pending amount">
+      |          </div>
+      |        </div>
+      |      </div>
       |
-      |    <label for="pendingDueAmount">PendingDueAmount</label>
-      |    <input type="text" id="pendingDueAmount" name="pendingDueAmount"><br><br>
+      |      <div class="form-group">
+      |        <label for="overdueAmount">Overdue Amount:</label>
+      |        <input type="text" id="overdueAmount" name="overdueAmount" class="form-control" placeholder="Enter the amount currently overdue">
+      |      </div>
       |
-      |    <label for="pendingDueDate">PendingDueDate</label>
-      |    <input type="text" id="pendingDueDate" name="pendingDueDate"><br><br>
+      |      <div class="form-group">
+      |        <label for="totalBalance">Total Balance:</label>
+      |        <input type="text" id="totalBalance" name="totalBalance" class="form-control" placeholder="Enter the total balance">
+      |      </div>
       |
-      |    <label for="overdueAmount">OverdueAmount</label>
-      |    <input type="text" id="overdueAmount" name="overdueAmount"><br><br>
-      |
-      |    <label for="totalBalance">TotalBalance</label>
-      |    <input type="text" id="totalBalance" name="totalBalance"><br><br>
-      |
-      |    <input type="submit" value="Submit">
-      |  </form>
+      |      <button type="submit" class="btn btn-primary">Submit</button>
+      |    </form>
+      |  </div>
       |</body>
-      |</html>
-      |""".stripMargin
+      |</html>""".stripMargin
