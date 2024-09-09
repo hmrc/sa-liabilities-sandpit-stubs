@@ -17,7 +17,15 @@
 package uk.gov.hmrc.saliabilitiessandpitstubs.utils
 
 import scala.concurrent.Future
+import scala.concurrent.Future.successful
+import scala.util.Random
 
-trait DelaySimulator:
+trait NormalDelayDistributionStrategy(using random: Random) extends DelaySimulator:
+  self: DelayStrategy =>
 
-  def simulateNetworkConditions[T](result: T): Future[T]
+  override def simulateNetworkConditions[T](result: T): Future[T] = random.nextGaussian() match
+    case p if p < -1.0 => simulateFailureWithDelay(result)
+    case p if p < -0.5 => simulateRandomDelay(result)
+    case p if p < 0.0  => simulateThrottling(result)
+    case p if p < 1.0  => simulateTimeout()
+    case _             => successful(result)

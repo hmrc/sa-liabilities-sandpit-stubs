@@ -27,18 +27,23 @@ import uk.gov.hmrc.saliabilitiessandpitstubs.service.BalanceDetailService
 import uk.gov.hmrc.saliabilitiessandpitstubs.utils.DelaySimulator
 
 import javax.inject.Inject
-import scala.concurrent.ExecutionContext
+import scala.concurrent.{ExecutionContext, Future}
 import scala.util.Random
 
 class BalanceController @Inject() (
   val controllerComponents: ControllerComponents
-)(using AuthorizationActionFilter, BalanceDetailService, Random, ExecutionContext, JsValidator[BalanceDetail])
-    extends BalanceActions,
+)(using
+  AuthorizationActionFilter,
+  BalanceDetailService,
+  Random,
+  ExecutionContext,
+  JsValidator[BalanceDetail],
+  DelaySimulator
+) extends BalanceActions,
       SaveNewLiability,
       SaveGeneratedLiability,
       DeleteLiabilityAction,
       ReplaceExistingBalanceDetailAction,
       Streamliner[BalanceDetail],
       BackendBaseController,
-      DelaySimulator,
       Logging

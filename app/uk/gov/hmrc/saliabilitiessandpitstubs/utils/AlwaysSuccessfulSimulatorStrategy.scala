@@ -17,7 +17,8 @@
 package uk.gov.hmrc.saliabilitiessandpitstubs.utils
 
 import scala.concurrent.Future
+import scala.concurrent.Future.successful
 
-trait DelaySimulator:
+trait AlwaysSuccessfulSimulatorStrategy extends DelaySimulator:
 
-  def simulateNetworkConditions[T](result: T): Future[T]
+  override def simulateNetworkConditions[T](result: T): Future[T] = successful(result)

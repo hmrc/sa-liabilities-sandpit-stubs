@@ -34,6 +34,7 @@ import uk.gov.hmrc.saliabilitiessandpitstubs.models.{BalanceDetail, *}
 import uk.gov.hmrc.saliabilitiessandpitstubs.repository.{BalanceDetailRepository, InMemoryBalanceDetailRepository}
 import uk.gov.hmrc.saliabilitiessandpitstubs.service.{BalanceDetailService, DefaultBalanceDetailService}
 import uk.gov.hmrc.saliabilitiessandpitstubs.time.{DefaultFutureDateGenerator, FutureDateGenerator, StubbedSystemLocalDate, SystemLocalDate}
+import uk.gov.hmrc.saliabilitiessandpitstubs.utils.{AlwaysSuccessfulSimulatorStrategy, DelaySimulator}
 import uk.gov.hmrc.saliabilitiessandpitstubs.validator.ModelBasedBalanceDetailValidator
 
 import scala.concurrent.ExecutionContext
@@ -49,6 +50,7 @@ class BalanceControllerSpec extends AnyWordSpec with Matchers {
   given auth: OpenAuthAction                   = DefaultOpenAuthAction(executionContext)
   given BalanceDetailGeneratorResolver         = mock
   given repo: BalanceDetailRepository          = InMemoryBalanceDetailRepository
+  given DelaySimulator                         = AlwaysSuccessfulSimulatorStrategy
   given BalanceDetailService                   = DefaultBalanceDetailService()
   private val controller                       = BalanceController(components)
 

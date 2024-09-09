@@ -21,6 +21,7 @@ import uk.gov.hmrc.saliabilitiessandpitstubs.controllers.action.{AuthorizationAc
 import uk.gov.hmrc.saliabilitiessandpitstubs.json.JsValidator
 import uk.gov.hmrc.saliabilitiessandpitstubs.models.BalanceDetail
 import uk.gov.hmrc.saliabilitiessandpitstubs.time.{LiveSystemLocalDate, StubbedSystemLocalDate, SystemLocalDate}
+import uk.gov.hmrc.saliabilitiessandpitstubs.utils.{AlwaysSuccessfulSimulatorStrategy, DelaySimulator, DelaySimulatorStrategy, DiscreteDelayDistributionStrategy, LogDelayDistributionStrategy, NormalDelayDistributionStrategy}
 import uk.gov.hmrc.saliabilitiessandpitstubs.validator.{BalanceDetailValidator, ModelBasedBalanceDetailValidator}
 
 import javax.inject.{Inject, Provider}
@@ -45,3 +46,16 @@ class BalanceDetailValidatorRequestProvider @Inject() (config: AppConfig) extend
   val get: JsValidator[BalanceDetail] =
     if config.balanceDetailValidationEnable then BalanceDetailValidator(config.balanceDetailValidatorFields.toSet)
     else ModelBasedBalanceDetailValidator
+
+class DelaySimulatorProvider @Inject() (config: AppConfig)(using
+  discreteDelayDistributionStrategy: DiscreteDelayDistributionStrategy,
+  alwaysSuccessfulSimulatorStrategy: AlwaysSuccessfulSimulatorStrategy,
+  normalDelayDistributionStrategy: NormalDelayDistributionStrategy,
+  logDelayDistributionStrategy: LogDelayDistributionStrategy
+) extends Provider[DelaySimulator]:
+  val get: DelaySimulator = Map(
+    DelaySimulatorStrategy.Log      -> logDelayDistributionStrategy,
+    DelaySimulatorStrategy.Normal   -> normalDelayDistributionStrategy,
+    DelaySimulatorStrategy.Discrete -> discreteDelayDistributionStrategy,
+    DelaySimulatorStrategy.None     -> alwaysSuccessfulSimulatorStrategy
+  ).getOrElse(config.simulatorStrategy, discreteDelayDistributionStrategy)
