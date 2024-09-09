@@ -14,14 +14,13 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.saliabilitiessandpitstubs
+package uk.gov.hmrc.saliabilitiessandpitstubs.validator
 
-import uk.gov.hmrc.saliabilitiessandpitstubs.generator.{BalanceDetailGeneratorResolver, BalanceDetailInitialGeneratorResolver, BalanceDetailRandomize}
+import play.api.libs.json.{JsResult, JsValue}
+import uk.gov.hmrc.saliabilitiessandpitstubs.json.JsValidator
+import uk.gov.hmrc.saliabilitiessandpitstubs.models.BalanceDetail
 
-import javax.inject.Inject
+class ModelBasedBalanceDetailValidator extends JsValidator[BalanceDetail]:
 
-package object service:
-  case class DefaultBalanceDetailService @Inject() (
-    generator: BalanceDetailInitialGeneratorResolver,
-    res: BalanceDetailGeneratorResolver
-  ) extends BalanceDetailService(using generator, res)
+  override def validate(json: JsValue): JsResult[BalanceDetail] =
+    json.validate[BalanceDetail]

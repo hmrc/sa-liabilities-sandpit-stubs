@@ -14,14 +14,13 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.saliabilitiessandpitstubs
+package uk.gov.hmrc.saliabilitiessandpitstubs.generator
 
-import uk.gov.hmrc.saliabilitiessandpitstubs.generator.{BalanceDetailGeneratorResolver, BalanceDetailInitialGeneratorResolver, BalanceDetailRandomize}
+import play.api.mvc.{AnyContent, Request}
+import uk.gov.hmrc.saliabilitiessandpitstubs.generator.GenerationStrategy.loadStrategy
 
-import javax.inject.Inject
+trait BalanceDetailGeneratorBackendHeaderCarrierProvider(using header: String):
 
-package object service:
-  case class DefaultBalanceDetailService @Inject() (
-    generator: BalanceDetailInitialGeneratorResolver,
-    res: BalanceDetailGeneratorResolver
-  ) extends BalanceDetailService(using generator, res)
+  extension (request: Request[AnyContent])
+    def generationStrategy: Option[GenerationStrategy] =
+      request.headers get header flatMap loadStrategy

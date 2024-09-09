@@ -17,6 +17,7 @@
 package uk.gov.hmrc.saliabilitiessandpitstubs
 
 import com.github.javafaker.Faker
+import uk.gov.hmrc.saliabilitiessandpitstubs.config.AppConfig
 import uk.gov.hmrc.saliabilitiessandpitstubs.time.{FakerExtensions, LocalDateExtensions}
 
 import javax.inject.Inject
@@ -30,5 +31,13 @@ package object generator:
 
   case class DefaultBalanceDetailGeneratorResolver @Inject() ()(using
     faker: BalanceDetailFaker,
-    randomize: BalanceDetailRandomize
+    randomize: BalanceDetailRandomize,
+    config: AppConfig
   ) extends BalanceDetailGeneratorResolver
+      with BalanceDetailGeneratorBackendHeaderCarrierProvider(using config.defaultGenerationHeader)
+
+  case class DefaultBalanceDetailInitialGeneratorResolver @Inject() ()(using
+    faker: BalanceDetailFaker,
+    randomize: BalanceDetailRandomize,
+    config: AppConfig
+  ) extends BalanceDetailInitialGeneratorResolver

@@ -16,16 +16,13 @@
 
 package uk.gov.hmrc.saliabilitiessandpitstubs.controllers.action
 
-import play.api.libs.json.JsValue
 import play.api.libs.json.Json.obj
-import play.api.mvc.{Action, AnyContent, BaseController, Request, Result}
-import play.api.mvc.Results.{BadRequest, Created}
+import play.api.mvc.Results.Created
+import play.api.mvc.*
 import uk.gov.hmrc.saliabilitiessandpitstubs.controllers.action.SaveGeneratedLiability.CreatedNewLiabilityResult
-import uk.gov.hmrc.saliabilitiessandpitstubs.models.BalanceDetail
 import uk.gov.hmrc.saliabilitiessandpitstubs.service.BalanceDetailService
 
 import scala.concurrent.{ExecutionContext, Future}
-import scala.concurrent.Future.successful
 
 private[controllers] trait SaveGeneratedLiability(using
   auth: AuthorizationActionFilter,
