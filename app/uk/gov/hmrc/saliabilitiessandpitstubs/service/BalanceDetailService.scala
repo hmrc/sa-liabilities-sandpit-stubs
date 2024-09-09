@@ -16,10 +16,11 @@
 
 package uk.gov.hmrc.saliabilitiessandpitstubs.service
 
-import uk.gov.hmrc.saliabilitiessandpitstubs.generator.BalanceDetailGenerator
-import uk.gov.hmrc.saliabilitiessandpitstubs.models.{BalanceDetail, *}
+import play.api.mvc.{AnyContent, Request}
+import uk.gov.hmrc.saliabilitiessandpitstubs.generator.{BalanceDetailGeneratorResolver, BalanceDetailInitialGeneratorResolver, BalanceDetailRandomize}
+import uk.gov.hmrc.saliabilitiessandpitstubs.models.*
 
-trait BalanceDetailService(using generator: BalanceDetailGenerator):
+trait BalanceDetailService(using generator: BalanceDetailInitialGeneratorResolver, res: BalanceDetailGeneratorResolver):
 
   private var details: Map[String, BalanceDetail | Seq[BalanceDetail]] = Map(
     "AA000000A" -> generator.generate,
@@ -31,9 +32,10 @@ trait BalanceDetailService(using generator: BalanceDetailGenerator):
   val balanceDetailsByNino: String => Option[BalanceDetail | Seq[BalanceDetail]] = details.get(_: String)
 
   val addOrUpdateBalanceDetail: (String, BalanceDetail) => Unit = (nino: String, balanceDetail: BalanceDetail) =>
-    details = details.get(nino) match
+    details = details get nino match
       case Some(existingDetail: BalanceDetail)       => details + (nino -> Seq(existingDetail, balanceDetail))
       case Some(existingDetails: Seq[BalanceDetail]) => details + (nino -> (existingDetails :+ balanceDetail))
       case None                                      => details + (nino -> balanceDetail)
 
-  val addOrUpdateGeneratedBalanceDetail: String => Unit = addOrUpdateBalanceDetail(_: String, generator.generate)
+  def addOrUpdateGeneratedBalanceDetail(nino: String)(implicit request: Request[AnyContent]): Unit =
+    addOrUpdateBalanceDetail(nino, res.generate(request))

@@ -9,6 +9,7 @@ object AppDependencies {
   val compile = Seq(
     "uk.gov.hmrc"             %% "bootstrap-backend-play-30"  % bootstrapVersion,
     "org.apache.pekko"        %% "pekko-stream"               % PekkoVersion,
+    "com.github.javafaker"    % "javafaker"                   % "1.0.2"
   )
 
   val test = Seq(

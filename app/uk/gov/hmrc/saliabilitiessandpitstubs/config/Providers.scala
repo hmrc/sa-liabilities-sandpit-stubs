@@ -18,6 +18,9 @@
 package uk.gov.hmrc.saliabilitiessandpitstubs.config
 
 import uk.gov.hmrc.saliabilitiessandpitstubs.controllers.action.{AuthorizationActionFilter, DefaultOpenAuthAction, DefaultTokenBasedAction}
+import uk.gov.hmrc.saliabilitiessandpitstubs.json.JsValidator
+import uk.gov.hmrc.saliabilitiessandpitstubs.models.BalanceDetail
+import uk.gov.hmrc.saliabilitiessandpitstubs.validator.{BalanceDetailValidator, ModelBasedBalanceDetailValidator}
 
 import javax.inject.{Inject, Provider}
 import scala.concurrent.ExecutionContext
@@ -32,3 +35,14 @@ class AuthActionProvider @Inject() (config: AppConfig, executionContext: Executi
 
 class RandomProvider @Inject() (config: AppConfig) extends Provider[Random]:
   val get: Random = (config.randomSeed fold Random())(Random(_))
+
+class BalanceDetailValidatorRequestProvider @Inject() (config: AppConfig) extends Provider[JsValidator[BalanceDetail]]:
+  val get: JsValidator[BalanceDetail] =
+    if config.balanceDetailValidationEnable then
+      classOf[BalanceDetailValidator]
+        .getConstructor(classOf[Set[String]])
+        .newInstance(Set("pendingDueAmount", "overdueAmount", "payableAmount"))
+    else
+      classOf[ModelBasedBalanceDetailValidator]
+        .getConstructor()
+        .newInstance()

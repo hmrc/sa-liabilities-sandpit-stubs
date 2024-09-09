@@ -16,7 +16,19 @@
 
 package uk.gov.hmrc.saliabilitiessandpitstubs.generator
 
-import uk.gov.hmrc.saliabilitiessandpitstubs.models.BalanceDetail
+import com.typesafe.config.Config
+import play.api.{ConfigLoader, Configuration}
 
-trait BalanceDetailGenerator:
-  def generate: BalanceDetail
+enum GenerationStrategy:
+  case Faker, Randomize
+
+object GenerationStrategy:
+
+  def loadStrategy(strategyString: String): Option[GenerationStrategy] =
+    GenerationStrategy.values.find(_.toString.toLowerCase == strategyString.toLowerCase)
+
+  implicit val strategyConfigLoader: ConfigLoader[GenerationStrategy] = (config: Config, prefix: String) =>
+    Configuration(config).get[String](prefix) match
+      case "fake"      => Faker
+      case "randomize" => Randomize
+      case other       => throw new IllegalArgumentException(s"Invalid generation strategy: $other")

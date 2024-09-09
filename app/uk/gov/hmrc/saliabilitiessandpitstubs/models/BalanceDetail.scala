@@ -26,15 +26,32 @@ import scala.annotation.targetName
 import scala.collection.immutable.Iterable
 
 case class BalanceDetail(
-  payableAmount: PayableAmount,
-  payableDueDate: PayableDueDate,
-  pendingDueAmount: PendingDueAmount,
-  pendingDueDate: PendingDueDate,
-  overdueAmount: OverdueAmount,
-  totalBalance: TotalBalance
+  payableAmount: Option[PayableAmount] = None,
+  payableDueDate: Option[PayableDueDate] = None,
+  pendingDueAmount: Option[PendingDueAmount] = None,
+  pendingDueDate: Option[PendingDueDate] = None,
+  overdueAmount: Option[OverdueAmount] = None,
+  totalBalance: Option[TotalBalance] = None
 )
 
 object BalanceDetail:
+  def apply(
+    payableAmount: PayableAmount,
+    payableDueDate: PayableDueDate,
+    pendingDueAmount: PendingDueAmount,
+    pendingDueDate: PendingDueDate,
+    overdueAmount: OverdueAmount,
+    totalBalance: TotalBalance
+  ): BalanceDetail =
+    new BalanceDetail(
+      Some(payableAmount),
+      Some(payableDueDate),
+      Some(pendingDueAmount),
+      Some(pendingDueDate),
+      Some(overdueAmount),
+      Some(totalBalance)
+    )
+
   given Format[BalanceDetail] = Json.format[BalanceDetail]
 
   @targetName("UnionOfWriteableIterableBalanceDetail")

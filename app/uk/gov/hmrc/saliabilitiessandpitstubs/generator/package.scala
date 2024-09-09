@@ -16,11 +16,28 @@
 
 package uk.gov.hmrc.saliabilitiessandpitstubs
 
-import uk.gov.hmrc.saliabilitiessandpitstubs.time.LocalDateExtensions
+import com.github.javafaker.Faker
+import uk.gov.hmrc.saliabilitiessandpitstubs.config.AppConfig
+import uk.gov.hmrc.saliabilitiessandpitstubs.time.{FakerExtensions, LocalDateExtensions}
 
 import javax.inject.Inject
 import scala.util.Random
 
 package object generator:
   case class DefaultBalanceDetailGenerator @Inject() (random: Random)
-      extends BalanceDetailGenerator(using LocalDateExtensions)(random)
+      extends BalanceDetailRandomize(using LocalDateExtensions)(random)
+
+  case class DefaultBalanceDetailFaker @Inject() ()(using faker: Faker) extends BalanceDetailFaker, FakerExtensions
+
+  case class DefaultBalanceDetailGeneratorResolver @Inject() ()(using
+    faker: BalanceDetailFaker,
+    randomize: BalanceDetailRandomize,
+    config: AppConfig
+  ) extends BalanceDetailGeneratorResolver
+      with BalanceDetailGeneratorBackendHeaderCarrierProvider(using config.defaultGenerationHeader)
+
+  case class DefaultBalanceDetailInitialGeneratorResolver @Inject() ()(using
+    faker: BalanceDetailFaker,
+    randomize: BalanceDetailRandomize,
+    config: AppConfig
+  ) extends BalanceDetailInitialGeneratorResolver

@@ -14,14 +14,17 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.saliabilitiessandpitstubs
+package uk.gov.hmrc.saliabilitiessandpitstubs.time
 
-import uk.gov.hmrc.saliabilitiessandpitstubs.generator.{BalanceDetailGeneratorResolver, BalanceDetailInitialGeneratorResolver, BalanceDetailRandomize}
+import com.github.javafaker.Faker
 
-import javax.inject.Inject
+import java.time.LocalDate.ofInstant
+import java.time.ZoneId.systemDefault
+import java.time.{LocalDate, ZoneId}
+import java.util.concurrent.TimeUnit
 
-package object service:
-  case class DefaultBalanceDetailService @Inject() (
-    generator: BalanceDetailInitialGeneratorResolver,
-    res: BalanceDetailGeneratorResolver
-  ) extends BalanceDetailService(using generator, res)
+trait FakerExtensions:
+
+  extension (faker: Faker)
+    def dateInFuture(atMost: Int, unit: TimeUnit): LocalDate =
+      ofInstant((faker.date future (atMost, unit)).toInstant, systemDefault)

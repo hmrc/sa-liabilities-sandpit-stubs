@@ -16,7 +16,20 @@
 
 package uk.gov.hmrc.saliabilitiessandpitstubs.generator
 
+import play.api.mvc.{AnyContent, Request}
+import uk.gov.hmrc.saliabilitiessandpitstubs.generator.GenerationStrategy.{Faker, Randomize, loadStrategy}
 import uk.gov.hmrc.saliabilitiessandpitstubs.models.BalanceDetail
 
-trait BalanceDetailGenerator:
-  def generate: BalanceDetail
+trait BalanceDetailGeneratorResolver(using faker: BalanceDetailFaker, randomize: BalanceDetailRandomize):
+  self: BalanceDetailGeneratorBackendHeaderCarrierProvider =>
+
+  private val strategies: Map[GenerationStrategy, BalanceDetailGenerator] = Map(
+    Faker     -> faker,
+    Randomize -> randomize
+  )
+
+  def generate(implicit request: Request[AnyContent]): BalanceDetail =
+    request.generationStrategy
+      .flatMap(strategies.get)
+      .getOrElse(randomize)
+      .generate

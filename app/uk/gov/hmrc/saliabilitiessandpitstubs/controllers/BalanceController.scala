@@ -19,8 +19,9 @@ package uk.gov.hmrc.saliabilitiessandpitstubs.controllers
 import play.api.Logging
 import play.api.mvc.*
 import uk.gov.hmrc.play.bootstrap.backend.controller.BackendBaseController
-import uk.gov.hmrc.saliabilitiessandpitstubs.controllers.action.{AuthorizationActionFilter, BalanceActions, SaveNewLiability}
+import uk.gov.hmrc.saliabilitiessandpitstubs.controllers.action.*
 import uk.gov.hmrc.saliabilitiessandpitstubs.http.Streamliner
+import uk.gov.hmrc.saliabilitiessandpitstubs.json.JsValidator
 import uk.gov.hmrc.saliabilitiessandpitstubs.models.BalanceDetail
 import uk.gov.hmrc.saliabilitiessandpitstubs.service.BalanceDetailService
 import uk.gov.hmrc.saliabilitiessandpitstubs.utils.DelaySimulator
@@ -35,9 +36,11 @@ class BalanceController @Inject() (
   val auth: AuthorizationActionFilter,
   service: BalanceDetailService,
   random: Random,
-  executionContext: ExecutionContext
+  executionContext: ExecutionContext,
+  jsValidator: JsValidator[BalanceDetail]
 ) extends BalanceActions,
       SaveNewLiability,
+      SaveGeneratedLiability,
       Streamliner[BalanceDetail],
       BackendBaseController,
       DelaySimulator,
