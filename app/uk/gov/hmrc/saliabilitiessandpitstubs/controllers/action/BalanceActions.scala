@@ -25,11 +25,15 @@ import uk.gov.hmrc.saliabilitiessandpitstubs.models.BalanceDetail
 import uk.gov.hmrc.saliabilitiessandpitstubs.service.BalanceDetailService
 import uk.gov.hmrc.saliabilitiessandpitstubs.utils.DelaySimulator
 
-private[controllers] trait BalanceActions(using auth: AuthorizationActionFilter, service: BalanceDetailService):
-  self: BaseController & DelaySimulator & Streamliner[BalanceDetail] =>
+private[controllers] trait BalanceActions(using
+  auth: AuthorizationActionFilter,
+  service: BalanceDetailService,
+  network: DelaySimulator
+):
+  self: BaseController & Streamliner[BalanceDetail] =>
 
   def getBalanceByNino(nino: String): Action[AnyContent] = (Action andThen auth).async { implicit request: Request[_] =>
-    simulateNetworkConditions {
+    network.simulateNetworkConditions {
       service.balanceDetailsByNino(nino) match
         case Some(balanceDetails: Seq[BalanceDetail]) => Ok.sendEntity(marschal(balanceDetails))
         case Some(balance: BalanceDetail)             => Ok(balance)

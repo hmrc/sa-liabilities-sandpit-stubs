@@ -16,8 +16,18 @@
 
 package uk.gov.hmrc.saliabilitiessandpitstubs.utils
 
-import scala.concurrent.Future
+import com.typesafe.config.Config
+import play.api.{ConfigLoader, Configuration}
 
-trait DelaySimulator:
+enum DelaySimulatorStrategy:
+  case Log, Normal, Discrete, None
 
-  def simulateNetworkConditions[T](result: T): Future[T]
+object DelaySimulatorStrategy:
+
+  implicit val strategyConfigLoader: ConfigLoader[DelaySimulatorStrategy] = (config: Config, prefix: String) =>
+    Configuration(config).get[String](prefix) match
+      case "log"      => DelaySimulatorStrategy.Log
+      case "normal"   => DelaySimulatorStrategy.Normal
+      case "discrete" => DelaySimulatorStrategy.Discrete
+      case "none"     => DelaySimulatorStrategy.None
+      case other      => throw new IllegalArgumentException(s"Invalid network strategy: $other")

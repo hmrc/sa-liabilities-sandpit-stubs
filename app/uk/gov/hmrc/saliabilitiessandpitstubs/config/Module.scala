@@ -27,6 +27,7 @@ import uk.gov.hmrc.saliabilitiessandpitstubs.repository.BalanceDetailRepository
 import uk.gov.hmrc.saliabilitiessandpitstubs.repository.InMemoryBalanceDetailRepository
 import uk.gov.hmrc.saliabilitiessandpitstubs.service.{BalanceDetailService, DefaultBalanceDetailService}
 import uk.gov.hmrc.saliabilitiessandpitstubs.time.{DefaultFutureDateGenerator, FutureDateGenerator, SystemLocalDate}
+import uk.gov.hmrc.saliabilitiessandpitstubs.utils.*
 
 import scala.util.Random
 
@@ -41,8 +42,18 @@ class Module extends AbstractModule {
     bind(classOf[BalanceDetailFaker]).to(classOf[DefaultBalanceDetailFaker]).asEagerSingleton()
     bind(classOf[BalanceDetailService]).to(classOf[DefaultBalanceDetailService]).asEagerSingleton()
     bind(classOf[FutureDateGenerator]).to(classOf[DefaultFutureDateGenerator]).asEagerSingleton()
+    bind(classOf[DiscreteDelayDistributionStrategy])
+      .to(classOf[DefaultDiscreteDelayDistributionStrategy])
+      .asEagerSingleton()
+    bind(classOf[LogDelayDistributionStrategy]).to(classOf[DefaultLogDelayDistributionStrategy]).asEagerSingleton()
+    bind(classOf[NormalDelayDistributionStrategy])
+      .to(classOf[DefaultNormalDelayDistributionStrategy])
+      .asEagerSingleton()
+    bind(classOf[AlwaysSuccessfulSimulatorStrategy])
+      .toInstance(AlwaysSuccessfulSimulatorStrategy)
     bind(classOf[BalanceDetailRepository]).toInstance(InMemoryBalanceDetailRepository)
     bind(classOf[AuthorizationActionFilter]).toProvider(classOf[AuthActionProvider]).asEagerSingleton()
+    bind(classOf[DelaySimulator]).toProvider(classOf[DelaySimulatorProvider]).asEagerSingleton()
     bind(classOf[SystemLocalDate]).toProvider(classOf[LocalDateProvider]).asEagerSingleton()
     bind(classOf[BalanceDetailRandomize]).to(classOf[DefaultBalanceDetailGenerator]).asEagerSingleton()
     bind(classOf[BalanceDetailInitialGeneratorResolver])
