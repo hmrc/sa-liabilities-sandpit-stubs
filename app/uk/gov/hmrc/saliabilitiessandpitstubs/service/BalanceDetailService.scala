@@ -17,25 +17,22 @@
 package uk.gov.hmrc.saliabilitiessandpitstubs.service
 
 import play.api.mvc.{AnyContent, Request}
-import uk.gov.hmrc.saliabilitiessandpitstubs.generator.{BalanceDetailGeneratorResolver, BalanceDetailInitialGeneratorResolver, BalanceDetailRandomize}
+import uk.gov.hmrc.saliabilitiessandpitstubs.generator.BalanceDetailGeneratorResolver
 import uk.gov.hmrc.saliabilitiessandpitstubs.models.*
+import uk.gov.hmrc.saliabilitiessandpitstubs.repository.BalanceDetailRepository
 
-trait BalanceDetailService(using generator: BalanceDetailInitialGeneratorResolver, res: BalanceDetailGeneratorResolver):
+trait BalanceDetailService(using
+  balanceDetailGeneratorResolver: BalanceDetailGeneratorResolver,
+  repo: BalanceDetailRepository
+):
 
-  private var details: Map[String, BalanceDetail | Seq[BalanceDetail]] = Map(
-    "AA000000A" -> generator.generate,
-    "AA000000B" -> generator.generate,
-    "AA000000C" -> Seq.fill(2)(generator.generate),
-    "AA000000D" -> Seq.fill(4)(generator.generate)
-  )
+  def balanceDetailsByNino: String => Option[BalanceDetail | Seq[BalanceDetail]] = repo findByNino (_: String)
 
-  val balanceDetailsByNino: String => Option[BalanceDetail | Seq[BalanceDetail]] = details.get(_: String)
+  def addOrUpdateBalanceDetail: (String, BalanceDetail) => Unit = repo addOrUpdate (_: String, _: BalanceDetail)
 
-  val addOrUpdateBalanceDetail: (String, BalanceDetail) => Unit = (nino: String, balanceDetail: BalanceDetail) =>
-    details = details get nino match
-      case Some(existingDetail: BalanceDetail)       => details + (nino -> Seq(existingDetail, balanceDetail))
-      case Some(existingDetails: Seq[BalanceDetail]) => details + (nino -> (existingDetails :+ balanceDetail))
-      case None                                      => details + (nino -> balanceDetail)
+  def replaceBalanceDetail: (String, BalanceDetail) => Unit = repo replace (_: String, _: BalanceDetail)
 
   def addOrUpdateGeneratedBalanceDetail(nino: String)(implicit request: Request[AnyContent]): Unit =
-    addOrUpdateBalanceDetail(nino, res.generate(request))
+    addOrUpdateBalanceDetail(nino, balanceDetailGeneratorResolver generate request)
+
+  def deleteBalanceDetail: String => Unit = repo deleteByNino (_: String)

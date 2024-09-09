@@ -18,6 +18,7 @@ package uk.gov.hmrc.saliabilitiessandpitstubs.config
 
 import play.api.Configuration
 import uk.gov.hmrc.saliabilitiessandpitstubs.generator.GenerationStrategy
+import uk.gov.hmrc.saliabilitiessandpitstubs.time.TimeStrategy
 
 import javax.inject.Inject
 
@@ -26,6 +27,8 @@ class AppConfig @Inject() (config: Configuration):
   val bearerAuthorisationEnabled: Boolean       = config.get[Boolean]("feature-toggles.new-auth-check-enabled")
   val randomSeed: Option[Int]                   = config.get[Option[Int]]("generator.random.seed")
   val defaultGenerator: GenerationStrategy      = config.get[GenerationStrategy]("generator.default")
+  val timeStrategy: TimeStrategy                = config.get[TimeStrategy]("generator.time")
+  val currentDate: String                       = config.get[String]("generator.date")
   val defaultGenerationHeader: String           = config.get[String]("generator.request.header")
   val balanceDetailValidatorFields: Seq[String] = config.get[Seq[String]]("validation.balance.fields")
   val balanceDetailValidationEnable: Boolean    = config.get[Boolean]("validation.balance.enable")

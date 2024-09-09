@@ -16,29 +16,13 @@
 
 package uk.gov.hmrc.saliabilitiessandpitstubs.controllers
 
-import play.api.Logging
 import play.api.mvc.*
 import uk.gov.hmrc.play.bootstrap.backend.controller.BackendBaseController
 import uk.gov.hmrc.saliabilitiessandpitstubs.controllers.action.*
-import uk.gov.hmrc.saliabilitiessandpitstubs.http.Streamliner
-import uk.gov.hmrc.saliabilitiessandpitstubs.json.JsValidator
-import uk.gov.hmrc.saliabilitiessandpitstubs.models.BalanceDetail
 import uk.gov.hmrc.saliabilitiessandpitstubs.service.BalanceDetailService
-import uk.gov.hmrc.saliabilitiessandpitstubs.utils.DelaySimulator
 
 import javax.inject.Inject
-import scala.concurrent.ExecutionContext
-import scala.util.Random
 
-class BalanceController @Inject() (
-  val controllerComponents: ControllerComponents
-)(using AuthorizationActionFilter, BalanceDetailService, Random, ExecutionContext, JsValidator[BalanceDetail])
-    extends BalanceActions,
-      SaveNewLiability,
-      SaveGeneratedLiability,
-      DeleteLiabilityAction,
-      ReplaceExistingBalanceDetailAction,
-      Streamliner[BalanceDetail],
-      BackendBaseController,
-      DelaySimulator,
-      Logging
+class WizardController @Inject() (val controllerComponents: ControllerComponents)(using BalanceDetailService)
+    extends BackendBaseController,
+      WizardAction

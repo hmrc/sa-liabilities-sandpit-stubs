@@ -3,3 +3,8 @@
 GET        /balance/:nino             uk.gov.hmrc.saliabilitiessandpitstubs.controllers.BalanceController.getBalanceByNino(nino: String)
 PUT        /balance/:nino             uk.gov.hmrc.saliabilitiessandpitstubs.controllers.BalanceController.saveNewBalanceByNino(nino: String)
 POST       /balance/:nino             uk.gov.hmrc.saliabilitiessandpitstubs.controllers.BalanceController.saveGeneratedBalanceByNino(nino: String)
+DELETE     /balance/:nino             uk.gov.hmrc.saliabilitiessandpitstubs.controllers.BalanceController.deleteBalanceDetail(nino: String)
+PATCH      /balance/:nino             uk.gov.hmrc.saliabilitiessandpitstubs.controllers.BalanceController.replaceExistingBalanceDetailAction(nino: String)
+
+GET        /stub/                     uk.gov.hmrc.saliabilitiessandpitstubs.controllers.WizardController.cometString()
+POST       /stub/submit               uk.gov.hmrc.saliabilitiessandpitstubs.controllers.WizardController.submit()

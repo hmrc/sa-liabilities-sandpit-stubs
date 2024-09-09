@@ -23,7 +23,10 @@ import uk.gov.hmrc.saliabilitiessandpitstubs.controllers.action.AuthorizationAct
 import uk.gov.hmrc.saliabilitiessandpitstubs.generator.*
 import uk.gov.hmrc.saliabilitiessandpitstubs.json.JsValidator
 import uk.gov.hmrc.saliabilitiessandpitstubs.models.BalanceDetail
+import uk.gov.hmrc.saliabilitiessandpitstubs.repository.BalanceDetailRepository
+import uk.gov.hmrc.saliabilitiessandpitstubs.repository.InMemoryBalanceDetailRepository
 import uk.gov.hmrc.saliabilitiessandpitstubs.service.{BalanceDetailService, DefaultBalanceDetailService}
+import uk.gov.hmrc.saliabilitiessandpitstubs.time.{DefaultFutureDateGenerator, FutureDateGenerator, SystemLocalDate}
 
 import scala.util.Random
 
@@ -31,12 +34,16 @@ class Module extends AbstractModule {
 
   override def configure(): Unit = {
     bind(classOf[Faker]).asEagerSingleton()
+    bind(classOf[DatabaseInitializer]).asEagerSingleton()
     bind(classOf[AppConfig]).asEagerSingleton()
     bind(classOf[BalanceController]).asEagerSingleton()
     bind(classOf[Random]).toProvider(classOf[RandomProvider]).asEagerSingleton()
     bind(classOf[BalanceDetailFaker]).to(classOf[DefaultBalanceDetailFaker]).asEagerSingleton()
     bind(classOf[BalanceDetailService]).to(classOf[DefaultBalanceDetailService]).asEagerSingleton()
+    bind(classOf[FutureDateGenerator]).to(classOf[DefaultFutureDateGenerator]).asEagerSingleton()
+    bind(classOf[BalanceDetailRepository]).toInstance(InMemoryBalanceDetailRepository)
     bind(classOf[AuthorizationActionFilter]).toProvider(classOf[AuthActionProvider]).asEagerSingleton()
+    bind(classOf[SystemLocalDate]).toProvider(classOf[LocalDateProvider]).asEagerSingleton()
     bind(classOf[BalanceDetailRandomize]).to(classOf[DefaultBalanceDetailGenerator]).asEagerSingleton()
     bind(classOf[BalanceDetailInitialGeneratorResolver])
       .to(classOf[DefaultBalanceDetailInitialGeneratorResolver])

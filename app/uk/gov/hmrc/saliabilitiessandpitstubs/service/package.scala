@@ -16,12 +16,11 @@
 
 package uk.gov.hmrc.saliabilitiessandpitstubs
 
-import uk.gov.hmrc.saliabilitiessandpitstubs.generator.{BalanceDetailGeneratorResolver, BalanceDetailInitialGeneratorResolver, BalanceDetailRandomize}
+import uk.gov.hmrc.saliabilitiessandpitstubs.generator.BalanceDetailGeneratorResolver
+import uk.gov.hmrc.saliabilitiessandpitstubs.repository.BalanceDetailRepository
 
 import javax.inject.Inject
 
 package object service:
-  case class DefaultBalanceDetailService @Inject() (
-    generator: BalanceDetailInitialGeneratorResolver,
-    res: BalanceDetailGeneratorResolver
-  ) extends BalanceDetailService(using generator, res)
+  class DefaultBalanceDetailService @Inject() ()(using BalanceDetailGeneratorResolver, BalanceDetailRepository)
+      extends BalanceDetailService

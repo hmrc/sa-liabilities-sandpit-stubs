@@ -32,4 +32,4 @@ trait BalanceDetailInitialGeneratorResolver(using
     Randomize -> randomize
   )
 
-  val generate: BalanceDetail = strategies.getOrElse(config.defaultGenerator, randomize).generate
+  def generate: BalanceDetail = strategies.getOrElse(config.defaultGenerator, randomize).generate

@@ -45,8 +45,8 @@ trait DelaySimulator(using random: Random, executionContext: ExecutionContext):
     after(timeoutDuration, using = ActorSystem().scheduler)(failed(new TimeoutException("Simulated timeout")))
 
   def simulateNetworkConditions[T](result: T): Future[T] = random.nextDouble match
-    case r if r < 0.15 => simulateFailureWithDelay(result)
-    case r if r < 0.30 => simulateRandomDelay(result)
-    case r if r < 0.45 => simulateThrottling(result)
-    case r if r < 0.60 => simulateTimeout()
-    case _             => successful(result)
+//    case r if r < 0.15 => simulateFailureWithDelay(result)
+//    case r if r < 0.30 => simulateRandomDelay(result)
+//    case r if r < 0.45 => simulateThrottling(result)
+//    case r if r < 0.60 => simulateTimeout()
+    case _ => successful(result)
