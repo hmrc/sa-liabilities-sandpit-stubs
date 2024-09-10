@@ -17,6 +17,7 @@
 package uk.gov.hmrc.saliabilitiessandpitstubs.controllers
 
 import com.github.javafaker.Faker
+import org.apache.pekko.stream.Materializer
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
 import org.scalatestplus.mockito.MockitoSugar.mock
@@ -40,7 +41,7 @@ import uk.gov.hmrc.saliabilitiessandpitstubs.validator.ModelBasedBalanceDetailVa
 import scala.concurrent.ExecutionContext
 import scala.util.Random
 
-class BalanceControllerSpec extends AnyWordSpec with Matchers {
+class BalanceQueryControllerSpec extends AnyWordSpec with Matchers {
 
   private val fakeRequest                      = FakeRequest("GET", "/AA000000A")
   private val components: ControllerComponents = Helpers.stubControllerComponents()
@@ -49,10 +50,11 @@ class BalanceControllerSpec extends AnyWordSpec with Matchers {
   given JsValidator[BalanceDetail]             = ModelBasedBalanceDetailValidator
   given auth: OpenAuthAction                   = DefaultOpenAuthAction(executionContext)
   given BalanceDetailGeneratorResolver         = mock
+  given Materializer                           = mock
   given repo: BalanceDetailRepository          = InMemoryBalanceDetailRepository
   given DelaySimulator                         = AlwaysSuccessfulSimulatorStrategy
   given BalanceDetailService                   = DefaultBalanceDetailService()
-  private val controller                       = BalanceController(components)
+  private val controller                       = BalanceQueryController(components)
 
   "GET /balance/AA000000A" should {
     "return 200" in {
