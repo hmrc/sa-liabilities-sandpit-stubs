@@ -18,7 +18,7 @@ package uk.gov.hmrc.saliabilitiessandpitstubs.config
 
 import com.github.javafaker.Faker
 import com.google.inject.{AbstractModule, TypeLiteral}
-import uk.gov.hmrc.saliabilitiessandpitstubs.controllers.BalanceController
+import uk.gov.hmrc.saliabilitiessandpitstubs.controllers.{BalanceCommandController, BalanceQueryController}
 import uk.gov.hmrc.saliabilitiessandpitstubs.controllers.action.AuthorizationActionFilter
 import uk.gov.hmrc.saliabilitiessandpitstubs.generator.*
 import uk.gov.hmrc.saliabilitiessandpitstubs.json.JsValidator
@@ -37,7 +37,8 @@ class Module extends AbstractModule {
     bind(classOf[Faker]).asEagerSingleton()
     bind(classOf[DatabaseInitializer]).asEagerSingleton()
     bind(classOf[AppConfig]).asEagerSingleton()
-    bind(classOf[BalanceController]).asEagerSingleton()
+    bind(classOf[BalanceQueryController]).asEagerSingleton()
+    bind(classOf[BalanceCommandController]).asEagerSingleton()
     bind(classOf[Random]).toProvider(classOf[RandomProvider]).asEagerSingleton()
     bind(classOf[BalanceDetailFaker]).to(classOf[DefaultBalanceDetailFaker]).asEagerSingleton()
     bind(classOf[BalanceDetailService]).to(classOf[DefaultBalanceDetailService]).asEagerSingleton()

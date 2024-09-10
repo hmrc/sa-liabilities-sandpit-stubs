@@ -18,31 +18,26 @@ package uk.gov.hmrc.saliabilitiessandpitstubs.controllers
 
 import org.apache.pekko.stream.Materializer
 import play.api.Logging
-import play.api.mvc.*
+import play.api.mvc.ControllerComponents
 import uk.gov.hmrc.play.bootstrap.backend.controller.BackendBaseController
 import uk.gov.hmrc.saliabilitiessandpitstubs.controllers.action.*
 import uk.gov.hmrc.saliabilitiessandpitstubs.http.{FileStreamliner, Streamliner}
 import uk.gov.hmrc.saliabilitiessandpitstubs.json.JsValidator
 import uk.gov.hmrc.saliabilitiessandpitstubs.models.BalanceDetail
 import uk.gov.hmrc.saliabilitiessandpitstubs.service.BalanceDetailService
-import uk.gov.hmrc.saliabilitiessandpitstubs.utils.DelaySimulator
 
 import javax.inject.Inject
-import scala.concurrent.{ExecutionContext, Future}
-import scala.util.Random
+import scala.concurrent.ExecutionContext
 
-class BalanceController @Inject() (
+class BalanceCommandController @Inject() (
   val controllerComponents: ControllerComponents
 )(using
-  AuthorizationActionFilter,
-  BalanceDetailService,
-  Random,
+  Materializer,
   ExecutionContext,
-  JsValidator[BalanceDetail],
-  DelaySimulator,
-  Materializer
-) extends BalanceActions,
-      SaveNewLiability,
+  BalanceDetailService,
+  AuthorizationActionFilter,
+  JsValidator[BalanceDetail]
+) extends SaveNewLiability,
       SaveNewLiabilityFromFileAction,
       FileStreamliner[BalanceDetail],
       SaveGeneratedLiability,
