@@ -16,11 +16,12 @@
 
 package uk.gov.hmrc.saliabilitiessandpitstubs.controllers
 
+import org.apache.pekko.stream.Materializer
 import play.api.Logging
 import play.api.mvc.*
 import uk.gov.hmrc.play.bootstrap.backend.controller.BackendBaseController
 import uk.gov.hmrc.saliabilitiessandpitstubs.controllers.action.*
-import uk.gov.hmrc.saliabilitiessandpitstubs.http.Streamliner
+import uk.gov.hmrc.saliabilitiessandpitstubs.http.{FileStreamliner, Streamliner}
 import uk.gov.hmrc.saliabilitiessandpitstubs.json.JsValidator
 import uk.gov.hmrc.saliabilitiessandpitstubs.models.BalanceDetail
 import uk.gov.hmrc.saliabilitiessandpitstubs.service.BalanceDetailService
@@ -38,9 +39,12 @@ class BalanceController @Inject() (
   Random,
   ExecutionContext,
   JsValidator[BalanceDetail],
-  DelaySimulator
+  DelaySimulator,
+  Materializer
 ) extends BalanceActions,
       SaveNewLiability,
+      SaveNewLiabilityFromFileAction,
+      FileStreamliner[BalanceDetail],
       SaveGeneratedLiability,
       DeleteLiabilityAction,
       ReplaceExistingBalanceDetailAction,

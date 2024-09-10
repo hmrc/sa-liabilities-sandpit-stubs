@@ -5,6 +5,8 @@ PUT        /balance/:nino             uk.gov.hmrc.saliabilitiessandpitstubs.cont
 POST       /balance/:nino             uk.gov.hmrc.saliabilitiessandpitstubs.controllers.BalanceController.saveGeneratedBalanceByNino(nino: String)
 DELETE     /balance/:nino             uk.gov.hmrc.saliabilitiessandpitstubs.controllers.BalanceController.deleteBalanceDetail(nino: String)
 PATCH      /balance/:nino             uk.gov.hmrc.saliabilitiessandpitstubs.controllers.BalanceController.replaceExistingBalanceDetailAction(nino: String)
+POST       /balance/fromfile/:nino     uk.gov.hmrc.saliabilitiessandpitstubs.controllers.BalanceController.uploadBalances(nino: String)
+
 
 GET        /stub                      uk.gov.hmrc.saliabilitiessandpitstubs.controllers.WizardController.cometString()
 POST       /stub/submit               uk.gov.hmrc.saliabilitiessandpitstubs.controllers.WizardController.submit()

@@ -17,6 +17,7 @@
 package uk.gov.hmrc.saliabilitiessandpitstubs.controllers
 
 import com.github.javafaker.Faker
+import org.apache.pekko.stream.Materializer
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
 import org.scalatestplus.mockito.MockitoSugar.mock
@@ -49,6 +50,7 @@ class BalanceControllerSpec extends AnyWordSpec with Matchers {
   given JsValidator[BalanceDetail]             = ModelBasedBalanceDetailValidator
   given auth: OpenAuthAction                   = DefaultOpenAuthAction(executionContext)
   given BalanceDetailGeneratorResolver         = mock
+  given Materializer                           = mock
   given repo: BalanceDetailRepository          = InMemoryBalanceDetailRepository
   given DelaySimulator                         = AlwaysSuccessfulSimulatorStrategy
   given BalanceDetailService                   = DefaultBalanceDetailService()
