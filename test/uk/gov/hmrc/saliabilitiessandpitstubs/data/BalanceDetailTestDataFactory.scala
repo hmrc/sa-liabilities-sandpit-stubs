@@ -29,4 +29,13 @@ object BalanceDetailTestDataFactory {
     totalBalance = TotalBalance(BigDecimal(300.5))
   )
 
+  val aValidBalanceDetailGeneratedUsingSeed: BalanceDetail = BalanceDetail(
+    payableAmount = PayableAmount(BigDecimal(8884)),
+    payableDueDate = PayableDueDate("2024-10-16"),
+    pendingDueAmount = PendingDueAmount(BigDecimal(9970)),
+    pendingDueDate = PendingDueDate("2024-09-26"),
+    overdueAmount = OverdueAmount(BigDecimal(1248)),
+    totalBalance = TotalBalance(BigDecimal(20102))
+  )
+
 }
