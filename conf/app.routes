@@ -1,10 +1,12 @@
 # microservice specific routes
 
-GET        /balance/:nino             uk.gov.hmrc.saliabilitiessandpitstubs.controllers.BalanceController.getBalanceByNino(nino: String)
-PUT        /balance/:nino             uk.gov.hmrc.saliabilitiessandpitstubs.controllers.BalanceController.saveNewBalanceByNino(nino: String)
-POST       /balance/:nino             uk.gov.hmrc.saliabilitiessandpitstubs.controllers.BalanceController.saveGeneratedBalanceByNino(nino: String)
-DELETE     /balance/:nino             uk.gov.hmrc.saliabilitiessandpitstubs.controllers.BalanceController.deleteBalanceDetail(nino: String)
-PATCH      /balance/:nino             uk.gov.hmrc.saliabilitiessandpitstubs.controllers.BalanceController.replaceExistingBalanceDetailAction(nino: String)
+GET        /balance/:nino             uk.gov.hmrc.saliabilitiessandpitstubs.controllers.BalanceQueryController.getBalanceByNino(nino: String)
+PUT        /balance/:nino             uk.gov.hmrc.saliabilitiessandpitstubs.controllers.BalanceCommandController.saveNewBalanceByNino(nino: String)
+POST       /balance/:nino             uk.gov.hmrc.saliabilitiessandpitstubs.controllers.BalanceCommandController.saveGeneratedBalanceByNino(nino: String)
+DELETE     /balance/:nino             uk.gov.hmrc.saliabilitiessandpitstubs.controllers.BalanceCommandController.deleteBalanceDetail(nino: String)
+PATCH      /balance/:nino             uk.gov.hmrc.saliabilitiessandpitstubs.controllers.BalanceCommandController.replaceExistingBalanceDetailAction(nino: String)
+POST       /balance/fromfile/:nino     uk.gov.hmrc.saliabilitiessandpitstubs.controllers.BalanceCommandController.uploadBalances(nino: String)
+
 
 GET        /stub                      uk.gov.hmrc.saliabilitiessandpitstubs.controllers.WizardController.cometString()
 POST       /stub/submit               uk.gov.hmrc.saliabilitiessandpitstubs.controllers.WizardController.submit()
